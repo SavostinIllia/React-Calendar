@@ -29,24 +29,22 @@ export const useCalendar = ({
         endDate: null | ReturnType<typeof createDate>;
     }>({dateStartRange: null, endDate: null}) 
 
+    const [calendarDaysRender, setCalendarDayRender] = React.useState<CreateDateReturnType[]>([])
     const [dateGetRange, setDateGetRange] = React.useState<Date[]>([])
-
     const [selectedMonth, setSelectedMonth] = React.useState(
         createMonth({ date: new Date(selectedDate.year, selectedDate.monthIndex), locale })
     )
     const [selectedYear, setSelectedYear] = React.useState(selectedDate.year)
     const [selectedYearRange, setSelectedYearRange] = React.useState(getYearsRange(selectedYear))
+    const [enableHolidaysShow, setEnableHolidaysShow] = React.useState(false)
 
     const monthesNames = React.useMemo(() => getMonthesNames(locale), [])
     const weekDaysNames = React.useMemo(() => getWeekDaysNames(firstWeekDay, locale), [])
 
-    const [calendarDaysRender, setCalendarDayRender] = React.useState<CreateDateReturnType[]>([])
 
     const days = React.useMemo(() => selectedMonth.createMonthDays(), [selectedMonth, selectedYear])
 
-    
-    const {holidaysState} = useHolidayFetchHandler({year : selectedYear , month : selectedMonth.monthNumber , country: locale} )
-
+    const {holidaysState, fetchFunction} = useHolidayFetchHandler({year : selectedYear , month : selectedMonth.monthNumber , country: locale} )
 
     const calendarDaysToShow = React.useMemo(() => {
 
@@ -91,7 +89,7 @@ export const useCalendar = ({
         for (let i = totalCalendarDays - numberOfNextMonth; i < totalCalendarDays; i++) {
             calendarResult[i] = nextMonthDays[i - totalCalendarDays + numberOfNextMonth]
         }
-
+        
         if (holidaysState.isSuccess && holidaysState.data) {
             const holidays = holidaysState.data.response.holidays;
 
@@ -103,7 +101,7 @@ export const useCalendar = ({
 
         return calendarResult
 
-    }, [selectedMonth.year, selectedMonth.monthIndex, selectedYear, holidaysState.data,])
+    }, [selectedMonth.year, selectedMonth.monthIndex, selectedYear, holidaysState.data, enableHolidaysShow])
     
 
     const calendarStepChangeHandler = (direction: 'prev' | 'next') => {
@@ -153,20 +151,33 @@ export const useCalendar = ({
         
     } 
 
-    const setSelectedMonthHandler = (monthIndex : number) => {
-
-        setSelectedMonth(createMonth({date: new Date(selectedYear, monthIndex), locale}))
-    }
+    const setSelectedMonthHandler = React.useCallback(
+        (monthIndex: number) => {
+            setSelectedMonth(createMonth({ date: new Date(selectedYear, monthIndex), locale }));
+        },
+        [selectedYear, locale]
+    );
 
     React.useEffect(() => {
         if (selectedDateRange.dateStartRange && selectedDateRange.endDate) {
-            const dateArray = [];
-            for (let currentDate = new Date(selectedDateRange.dateStartRange.date); currentDate <= new Date(selectedDateRange.endDate.date); currentDate.setDate(currentDate.getDate() + 1)) {
+
+            let dateArray = [];
+            let startDate = new Date(selectedDateRange.dateStartRange.date);
+            let endDate = new Date(selectedDateRange.endDate.date);
+
+            let earlierDate = startDate < endDate ? startDate : endDate;
+            let laterDate = startDate < endDate ? endDate : startDate;
+
+            for (let currentDate = new Date(earlierDate); currentDate <= laterDate; currentDate.setDate(currentDate.getDate() + 1)) {
                 dateArray.push(new Date(currentDate));
             }
-            setDateGetRange(dateArray);
-        }
-        else{
+            
+            if (startDate > endDate) {
+                dateArray.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+            }
+
+            return setDateGetRange(dateArray);
+        }else{
             setDateGetRange([])
         }
     }, [selectedDateRange.dateStartRange, selectedDateRange.endDate]);
@@ -175,6 +186,11 @@ export const useCalendar = ({
     React.useEffect(() => {
         setCalendarDayRender(calendarDaysToShow);
     }, [calendarDaysToShow]);
+
+    React.useEffect(() => {
+        enableHolidaysShow && fetchFunction.refetch();
+    }, [selectedMonth, selectedYear, enableHolidaysShow]);
+
 
     return {
         state: {
@@ -196,7 +212,9 @@ export const useCalendar = ({
             setSelectedMonthHandler,
             setSelectedYearRange,
             setSelectedYear,
-            setSelectedDayRange
+            setSelectedDayRange,
+            setEnableHolidaysShow,
+            fetchFunction
         }
     }
 }

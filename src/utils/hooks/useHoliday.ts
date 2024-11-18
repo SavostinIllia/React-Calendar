@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Holiday } from "../../../types";
+import { Holiday } from "../../types/index";
 
 
 const holidayApiKey = import.meta.env.VITE_CALENDARIFIC_KEY;
@@ -23,18 +23,31 @@ interface HolidayFetchResponse {
 
 
 export const useHolidayFetchHandler = ({ year, month, country }: HolidayFetchHandlerParams) => {
-    const { data, isLoading, error, isSuccess } = useQuery({
+
+    const fetchHolidays = async (): Promise<HolidayFetchResponse> => {
+       
+        const response = await fetch(
+            `${holidayApiUrl}?&api_key=${holidayApiKey}&country=${country?.split('-')[1]}&year=${year}&month=${month}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch holidays: ${response.statusText}`);
+        }
+        const data = await response.json();
+    
+        // Переконуємося, що функція повертає завжди правильний тип
+        if (!data || !data.response || !data.response.holidays) {
+            throw new Error("Invalid holiday data received from API");
+        }
+    
+        return data;
+    };
+
+    const { data, isLoading, error, isSuccess, refetch } = useQuery({
         queryKey: ['holidays', year, month, country],
-        queryFn: async (): Promise<HolidayFetchResponse> => {
-            const result = await fetch(
-                `${holidayApiUrl}?&api_key=${holidayApiKey}&country=${country?.split('-')[1]}&year=${year}&month=${month}`
-            );
-            if (!result.ok) {
-                throw new Error('Failed to fetch holidays');
-            }
-            return await result.json();
-        },
+        queryFn: fetchHolidays,
         refetchOnWindowFocus: false, 
+        enabled: false,
         refetchOnMount: false, 
         refetchOnReconnect: false, 
     });
@@ -48,5 +61,8 @@ export const useHolidayFetchHandler = ({ year, month, country }: HolidayFetchHan
             error: error ? error : null,
             isSuccess,
         },
+        fetchFunction: {
+            refetch
+        }
     };
 };

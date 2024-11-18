@@ -21,6 +21,7 @@ export const Calendar: React.FC<CalendarProps> = ({
     
   const {state, functions} = useCalendar({firstWeekDay, locale, selectedDate})
 
+  console.log('state', state)
   return (
     
     <div className="calendar">
@@ -145,6 +146,12 @@ export const Calendar: React.FC<CalendarProps> = ({
           </div>
         )}
         </div>
+        <button onClick={() => {
+          functions.setEnableHolidaysShow(true)
+          functions.fetchFunction.refetch
+          }}>
+              Show holidays 
+        </button>
     </div>
   )
 }
