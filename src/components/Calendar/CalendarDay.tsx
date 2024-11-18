@@ -20,7 +20,7 @@ export const CalendarDay:React.FC<CalendarDayProps> = ({
                 holiday ? 'test' : ''
                 ].join(' ')}
             >
-            {day?.dayNumber}
+            {day.dayNumber}
            </div>
     )
 }

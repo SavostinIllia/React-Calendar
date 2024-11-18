@@ -1,5 +1,5 @@
 import React from "react";
-import { useCalendar } from "./hooks/useCalendar";
+import { useCalendar } from "../../utils/hooks/useCalendar";
 import './Calendar.css';
 import { CalendarDay } from "./CalendarDay";
 import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../utils/helpers/date";
@@ -20,7 +20,7 @@ export const Calendar: React.FC<CalendarProps> = ({
    }) => {
     
   const {state, functions} = useCalendar({firstWeekDay, locale, selectedDate})
-console.log('state', state)
+
   return (
     
     <div className="calendar">

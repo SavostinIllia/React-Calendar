@@ -1,7 +1,7 @@
 import React from "react";
-import { createMonth, createDate, getMonthesNames, getWeekDaysNames, getMonthNumberOfDays } from "../../../utils/helpers/date";
+import { createMonth, createDate, getMonthesNames, getWeekDaysNames, getMonthNumberOfDays } from "../helpers/date/index";
 import { useHolidayFetchHandler } from "./useHoliday";
-import { CreateDateReturnType } from "../../../types";
+import { CreateDateReturnType } from "../../types/index";
 
 
 interface useCalendarParams {
@@ -154,7 +154,7 @@ export const useCalendar = ({
     } 
 
     const setSelectedMonthHandler = (monthIndex : number) => {
-        debugger
+
         setSelectedMonth(createMonth({date: new Date(selectedYear, monthIndex), locale}))
     }
 
