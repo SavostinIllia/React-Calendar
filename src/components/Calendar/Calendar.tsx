@@ -1,8 +1,9 @@
 import React from "react";
 import { useCalendar } from "../../utils/hooks/useCalendar";
-import './Calendar.css';
-import { CalendarDay } from "./CalendarDay";
+import { CalendarDay } from "../CalendarDay/CalendarDay";
 import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../utils/helpers/date";
+import './Calendar.css';
+
 
 
 interface CalendarProps { 
@@ -21,7 +22,6 @@ export const Calendar: React.FC<CalendarProps> = ({
     
   const {state, functions} = useCalendar({firstWeekDay, locale, selectedDate})
 
-  console.log('state', state)
   return (
     
     <div className="calendar">
@@ -150,8 +150,9 @@ export const Calendar: React.FC<CalendarProps> = ({
           functions.setEnableHolidaysShow(true)
           functions.fetchFunction.refetch
           }}>
-              Show holidays 
+              Show holidays
         </button>
     </div>
   )
+  
 }
