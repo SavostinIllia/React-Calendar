@@ -1,6 +1,6 @@
 import React from 'react'
 import './static/css/global.css';
-import { Calendar } from './components/Calendar/Calendar';
+import { Calendar, RightBoard } from './components/index'
 import { dateFormater } from './utils/helpers/date';
 import { useTheme  } from './context/ThemeContext';
 
@@ -8,21 +8,22 @@ import { useTheme  } from './context/ThemeContext';
 
 export const  App: React.FC = () => {
   
-  const { theme, toggleTheme } = useTheme();  
+  const {theme, toggleTheme } = useTheme();  
   const [selectedDate, selectDate] = React.useState(new Date())
   const currentLocale = navigator.language
-
-console.log('teheme', theme)
   
-  return (
+  return (  
     <>
-      <div className={`${theme} app__container bg-blue-500 text-white p-4 rounded`}>
-        <div className='date__container'>
+      <div className={`${theme} main_calendar_wrapper flex justify-center h-screen items-center `}>
+        <div className='w-full max-w-screen-lg flex justify-center items-center h-550px shadow-custom rounded-xl'>
+        {/* <div className='date__container '>
           {dateFormater(selectedDate, currentLocale,  'DD MM YYYY')}
-        </div>
+        </div> */}
+        <RightBoard />
         <Calendar locale={currentLocale} selectDate={selectDate} selectedDate={selectedDate}/>
+        </div>
       </div>
-      <button onClick={() => toggleTheme()}>dfdf</button>
+      
     </>
   )
 }

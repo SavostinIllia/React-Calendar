@@ -6,5 +6,7 @@ export interface CalendarDayProps {
     isSelectedDay: boolean;
     isAdditionalDay: boolean;
     checkInRange: boolean;
+    startRangeDate? : boolean;
+    endRangeDate? : boolean;
     holiday?: Holiday
 }

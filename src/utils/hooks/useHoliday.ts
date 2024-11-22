@@ -26,9 +26,8 @@ export const useHolidayFetchHandler = ({ year, month, country }: HolidayFetchHan
 
     const fetchHolidays = async (): Promise<HolidayFetchResponse> => {
        
-        const response = await fetch(
-            `${holidayApiUrl}?&api_key=${holidayApiKey}&country=${country?.split('-')[1]}&year=${year}&month=${month}`
-        );
+        const response = await fetch('rer');
+        // `${holidayApiUrl}?&api_key=${holidayApiKey}&country=${country?.split('-')[1]}&year=${year}&month=${month}`
 
         if (!response.ok) {
             throw new Error(`Failed to fetch holidays: ${response.statusText}`);
