@@ -31,6 +31,9 @@ export const useCalendar = ({
 
     const [calendarDaysRender, setCalendarDayRender] = React.useState<CreateDateReturnType[]>([])
     const [dateGetRange, setDateGetRange] = React.useState<Date[]>([])
+    const [dateRangeReverted, setDateRangeReverted] = React.useState(false)
+
+
     const [selectedMonth, setSelectedMonth] = React.useState(
         createMonth({ date: new Date(selectedDate.year, selectedDate.monthIndex), locale })
     )
@@ -173,11 +176,18 @@ export const useCalendar = ({
             }
             
             if (startDate > endDate) {
+                setDateRangeReverted(true),
                 dateArray.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+                setDateGetRange(dateArray)
+                return
+            }else{
+                setDateRangeReverted(false),
+                setDateGetRange(dateArray)
             }
 
-            return setDateGetRange(dateArray);
+            
         }else{
+            setDateRangeReverted(false),
             setDateGetRange([])
         }
     }, [selectedDateRange.dateStartRange, selectedDateRange.endDate]);
@@ -204,6 +214,7 @@ export const useCalendar = ({
             selectedYearRange,
             dateGetRange,
             selectedDateRange,
+            dateRangeReverted
         },
         functions: {
             setMode,

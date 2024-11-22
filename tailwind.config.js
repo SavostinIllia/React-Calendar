@@ -9,6 +9,11 @@ export default {
         turquoise: "var(--turqoise)",
         "txt-color": "var(--text-color)",
         "thm-bg": "var(--thm-bg)",
+        currentDay: "var(--current-day)",
+        "additional-txt-color": "var(--additional-txt-color)",
+      },
+      backgroundImage: {
+        arrsvg: "url('./static/images/arrow_white.svg')",
       },
       spacing: {
         "550px": "550px",

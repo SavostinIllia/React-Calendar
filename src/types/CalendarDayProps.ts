@@ -9,4 +9,5 @@ export interface CalendarDayProps {
     startRangeDate? : boolean;
     endRangeDate? : boolean;
     holiday?: Holiday
+    reverted? : boolean
 }

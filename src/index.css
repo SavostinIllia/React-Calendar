@@ -5,6 +5,8 @@
 @layer base {
   :root {
     --turqoise: #19e1ae;
+    --current-day: #ebc22f;
+    --additional-txt-color: #19e1ae;
   }
 }
 
@@ -18,32 +20,65 @@
   --thm-bg: #fff;
 }
 
+.calendar .date-column:nth-child(7n) .date {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+}
+
 .date {
   position: relative;
   z-index: 5;
 }
 
-.calendar .date-column:nth-child(7n) .date {
-  border-radius: 24px;
-  overflow: hidden;
-}
-
 .date:after {
   content: "";
-  width: 1px;
   position: absolute;
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
+  width: 0;
+  left: 0;
+}
+
+.date.date_in_range.start_range:after {
   border-radius: 24px 0 0 24px;
+}
+
+.date.date_in_range.end_range:after {
+  display: none;
+  border-radius: 0 24px 24px 0;
 }
 
 .date.date_in_range:after {
   content: "";
-  background: var(--turqoise);
-  height: 100%;
   position: absolute;
-  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  width: 95px;
+  height: 100%;
   left: 0;
-  width: 100px;
   z-index: -1;
+  background: var(--turqoise);
+}
+
+.date-column.reverted .date.date_in_range:after {
+  background-color: #ff6b6b;
+}
+
+.date-column.reverted .date.end_range {
+  overflow: unset;
+}
+.date-column.reverted .date.start_range {
+  overflow: hidden;
+}
+
+.date-column.reverted .date.end_range:after {
+  display: block;
+  border-radius: 24px 0 0 24px;
+}
+
+.arr:hover {
+  filter: brightness(0) saturate(100%) invert(89%) sepia(29%) saturate(7138%)
+    hue-rotate(110deg) brightness(102%) contrast(80%);
+}
+
+.arr.light {
+  filter: brightness(0) saturate(100%) invert(89%) sepia(29%) saturate(7138%)
+    hue-rotate(110deg) brightness(102%) contrast(80%);
 }

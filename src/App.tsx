@@ -8,7 +8,7 @@ import { useTheme  } from './context/ThemeContext';
 
 export const  App: React.FC = () => {
   
-  const {theme, toggleTheme } = useTheme();  
+  const {theme, toggleTheme} = useTheme();  
   const [selectedDate, selectDate] = React.useState(new Date())
   const currentLocale = navigator.language
   
@@ -21,6 +21,8 @@ export const  App: React.FC = () => {
         </div> */}
         <RightBoard />
         <Calendar locale={currentLocale} selectDate={selectDate} selectedDate={selectedDate}/>
+
+        <button onClick={toggleTheme}> lkl</button>
         </div>
       </div>
       

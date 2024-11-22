@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useCalendar } from "../../../utils/hooks/useCalendar";
 import { CalendarDay } from "../../index"
-import { checkCurrentDate, checkDateEqual, isDateInRange,checkStartRangeDate } from "../../../utils/helpers/date";
+import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../../utils/helpers/date";
+import { useTheme } from "../../../context/ThemeContext";
 
 
 
@@ -20,18 +21,16 @@ export const Calendar: React.FC<CalendarProps> = ({
    }) => {
     
   const {state, functions} = useCalendar({firstWeekDay, locale, selectedDate})
+  const {theme} = useTheme()
 
   return (
     
     <div className="w-3/5 p-40px self-stretch bg-thm-bg">
-        <div className="pb-20px" >
-          <div aria-hidden className="" onClick={() => functions.calendarStepChangeHandler('prev')}/>
+        <div className={`pb-40px uppercase  font-semibold text-center text-3xl flex justify-between w-34 ${theme === 'light' ? ' text-additional-txt-color' : 'text-txt-color'} `}>
+          <div aria-hidden className={`arr w-[17px]  bg-arrsvg transition hover:cursor-pointer ${theme}`} onClick={() => functions.calendarStepChangeHandler('prev')}/>
             {state.mode === 'days' && (
               <div onClick={() => functions.setMode('monthes')}>
-                {!state.dateGetRange.length 
-                ? state.selectedDate.dayNumber
-                :`${state.dateGetRange[0].getDate()} - ${state.dateGetRange[state.dateGetRange.length - 1].getDate()}`} {state.monthesNames[state.selectedMonth.monthIndex].month} {state.selectedYear}
-                
+               {state.monthesNames[state.selectedMonth.monthIndex].month} {state.selectedYear}
               </div>
             )}
             {state.mode === 'monthes' && (
@@ -45,17 +44,17 @@ export const Calendar: React.FC<CalendarProps> = ({
                 {state.selectedYearRange[state.selectedYearRange.length  -1 ]}
               </div>
             )}
-          <div aria-hidden className="" onClick={() => functions.calendarStepChangeHandler('next')} />
+          <div aria-hidden className={`arr w-[17px] rotate-180 bg-arrsvg transition hover:cursor-pointer ${theme}`} onClick={() => functions.calendarStepChangeHandler('next')} />
         </div>
         <div className="flex flex-wrap ">
         {state.mode === 'days' && (
            <>
-            <div className="w-full grid grid-rows-1 grid-cols-7 pb-40px text-center gap-15px uppercase text-txt-color font-semibold">
+            <div className={`w-full grid grid-rows-1 grid-cols-7 pb-40px text-center gap-15px uppercase text-txt-color font-semibold ${theme === 'light' ? ' text-additional-txt-color' : 'text-txt-color'}`}>
               {state.weekDaysNames.map(weekDaysName => (
                 <div className="" key={weekDaysName.dayShort}>{weekDaysName.dayShort}</div>
               ))}
             </div>
-            <div className=" calendar w-full grid grid-rows-1 grid-cols-7 text-center gap-15px overflow-hidden">
+            <div className={`calendar w-full grid grid-rows-1 grid-cols-7 text-center gap-15px overflow-hidden  `}>
               {state.calendarDaysRender.map(day => {
                 
               const currentDate = checkCurrentDate(day.date);
@@ -64,10 +63,9 @@ export const Calendar: React.FC<CalendarProps> = ({
               const checkInRange = isDateInRange(day.date, state.selectedDateRange.dateStartRange?.date, state.selectedDateRange.endDate?.date );
               const startRangeDate = checkDateEqual(day.date, state.selectedDateRange.dateStartRange?.date )
               const endRangeDate = checkDateEqual(day.date, state.selectedDateRange.endDate?.date )
-
               return (
               <div  draggable
-                    className="date-column w-full flex items-center justify-center relative z-10"
+                    className={`date-column w-full flex items-center justify-center relative z-10 ${state.dateRangeReverted ? 'reverted' : ''}`}
                     key={`${day.dayNumber}-${day.monthIndex}`}
                     onDragStart={() => {
                       functions.setSelectedDayRange(() => ({ dateStartRange: day, endDate: null}))
@@ -93,6 +91,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                               startRangeDate={startRangeDate}
                               endRangeDate={endRangeDate}
                               holiday={day.holiday}
+                              reverted={state.dateRangeReverted}
                              />
               </div>
               )

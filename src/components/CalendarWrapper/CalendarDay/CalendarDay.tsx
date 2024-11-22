@@ -8,23 +8,24 @@ export const CalendarDay:React.FC<CalendarDayProps> = ({
     checkInRange,
     holiday,
     startRangeDate,
-    endRangeDate
+    endRangeDate,
+    reverted
  }) => {
 
         return (
             <div 
             className={[
-                'date rounded-full w-[35px] h-[35px] flex items-center justify-center relative text-txt-color font-semibold transition z-10',
-                currentDate ? 'cur bg-turquoise' : '',
-                isSelectedDay ? 'selec bg-turquoise' : '',
+                'date rounded-full w-[35px] h-[35px] flex items-center justify-center relative text-txt-color font-semibold transition z-10 hover:cursor-pointer',
+                currentDate ? 'bg-currentDay ' : '',
+                isSelectedDay ? 'bg-turquoise' : '',
                 isAdditionalDay ? 'opacity-5' : '',
-                checkInRange ? 'date_in_range bg-turquoise' : '',
+                checkInRange ? 'date_in_range !opacity-100 text-white' : '',
                 holiday ? '' : '',
-                startRangeDate ? "start-range bg-turquoise" : '',
-                endRangeDate ? "end-range bg-turquoise overflow-hidden !opacity-100" : '',
+                startRangeDate ? "start_range" : '',
+                endRangeDate ? "end_range !bg-turquoise overflow-hidden !opacity-100" : '',
                 ].join(' ')}
             >
-            {day.dayNumber}
+            <span className="relative z-10">{day.dayNumber}</span>
            </div>
     )
 }
