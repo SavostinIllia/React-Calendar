@@ -31,6 +31,7 @@ export const useCalendar = ({
 
     const [calendarDaysRender, setCalendarDayRender] = React.useState<CreateDateReturnType[]>([])
     const [dateGetRange, setDateGetRange] = React.useState<Date[]>([])
+
     const [dateRangeReverted, setDateRangeReverted] = React.useState(false)
 
 
@@ -162,6 +163,7 @@ export const useCalendar = ({
     );
 
     React.useEffect(() => {
+        console.log('called'    )
         if (selectedDateRange.dateStartRange && selectedDateRange.endDate) {
 
             let dateArray = [];
@@ -225,7 +227,7 @@ export const useCalendar = ({
             setSelectedYear,
             setSelectedDayRange,
             setEnableHolidaysShow,
-            fetchFunction
+            fetchFunction,
         }
     }
 }

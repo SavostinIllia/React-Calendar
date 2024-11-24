@@ -22,7 +22,7 @@ export const Calendar: React.FC<CalendarProps> = ({
     
   const {state, functions} = useCalendar({firstWeekDay, locale, selectedDate})
   const {theme} = useTheme()
-
+  
   return (
     
     <div className="w-3/5 p-40px self-stretch bg-thm-bg">
@@ -91,7 +91,6 @@ export const Calendar: React.FC<CalendarProps> = ({
                               startRangeDate={startRangeDate}
                               endRangeDate={endRangeDate}
                               holiday={day.holiday}
-                              reverted={state.dateRangeReverted}
                              />
               </div>
               )

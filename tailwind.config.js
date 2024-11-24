@@ -11,6 +11,7 @@ export default {
         "thm-bg": "var(--thm-bg)",
         currentDay: "var(--current-day)",
         "additional-txt-color": "var(--additional-txt-color)",
+        "flat-orange": "var(--flat-orange)",
       },
       backgroundImage: {
         arrsvg: "url('./static/images/arrow_white.svg')",
