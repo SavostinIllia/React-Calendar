@@ -5,9 +5,9 @@ import { CreateDateReturnType } from "../../types/index";
 
 
 interface useCalendarParams {
-    locale?: string;
+    locale: string;
     selectedDate: Date;
-    firstWeekDay: number
+    firstWeekDay?: number
 }
 
 const getYearsRange = (year: number) => {
@@ -20,7 +20,6 @@ export const useCalendar = ({
     selectedDate: date,
     firstWeekDay = 2
 }: useCalendarParams) => {
-    
     const [mode, setMode] = React.useState<'days' | 'monthes' | 'years'>('days')
 
     const [selectedDate, setSelectedDate] = React.useState(createDate({ date }))
@@ -163,7 +162,6 @@ export const useCalendar = ({
     );
 
     React.useEffect(() => {
-        console.log('called'    )
         if (selectedDateRange.dateStartRange && selectedDateRange.endDate) {
 
             let dateArray = [];
@@ -200,7 +198,7 @@ export const useCalendar = ({
     }, [calendarDaysToShow]);
 
     React.useEffect(() => {
-        enableHolidaysShow && fetchFunction.refetch();
+        enableHolidaysShow && fetchFunction.getHolidays();
     }, [selectedMonth, selectedYear, enableHolidaysShow]);
 
 

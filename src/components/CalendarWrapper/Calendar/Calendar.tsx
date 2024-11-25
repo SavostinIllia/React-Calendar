@@ -150,7 +150,7 @@ export const Calendar: React.FC<CalendarProps> = ({
         </div>
         <button onClick={() => {
           functions.setEnableHolidaysShow(true)
-          functions.fetchFunction.refetch
+          functions.fetchFunction.getHolidays
           }}>
               Show holidays
         </button>

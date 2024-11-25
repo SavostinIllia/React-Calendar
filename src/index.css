@@ -42,7 +42,7 @@
   position: absolute;
   overflow: hidden;
   width: 95px;
-  height: 35px;
+  height: 100%;
   left: 0;
   z-index: -1;
   background: transparent;
@@ -77,7 +77,7 @@
   position: absolute;
   overflow: hidden;
   width: 95px;
-  height: 35px;
+  height: 100%;
   left: 0;
   z-index: -1;
   background: transparent;
@@ -104,48 +104,6 @@
   border-right: 0;
   border-radius: 24px 0 0 24px;
 }
-
-/* 
-.date.date_in_range.start_range:after {
-  border-radius: 24px 0 0 24px;
-}
-
-.date.date_in_range.date.start_range {
-  border-left: 1px solid var(--turqoise);
-}
-.date.date_in_range.date.end_range {
-  border-right: 1px solid var(--turqoise);
-  background: transparent;
-}
-
-.date-column.reverted .date.end_range {
-  overflow: unset;
-  background: transparent;
-  border: 0;
-  border-left: 1px solid #ff6b6b;
-}
-
-.date-column.reverted .date.date_in_range.end_range:after {
-  border-radius: 24px 0 0 24px;
-  border-right: 0;
-}
-
-.date-column.reverted .date.date_in_range.start_range {
-  overflow: unset;
-  background: transparent;
-  border: 0;
-  border-right: 1px solid #ff6b6b;
-}
-
-.date-column.reverted .date.date_in_range.start_range:after {
-  display: none;
-}
-
-.date-column.reverted .date.date_in_range:after {
-  border: 1px solid #ff6b6b;
-  border-left: 0;
-  border-right: 0;
-} */
 
 .arr:hover {
   filter: brightness(0) saturate(100%) invert(89%) sepia(29%) saturate(7138%)
