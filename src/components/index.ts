@@ -1,4 +1,4 @@
 export * from './CalendarWrapper/Calendar/Calendar'
 export * from './CalendarWrapper/CalendarDay/CalendarDay'
-export * from './RightCalnedarBoard/CalendarBoard'
+export * from './CalendarWrapper/RightCalnedarBoard/CalendarBoard'
 

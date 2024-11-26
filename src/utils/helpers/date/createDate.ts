@@ -33,7 +33,6 @@ export const createDate = (params? : createDateparams) : CreateDateReturnType =>
 
       const timeStamp = d.getTime()
        
-
       return{
             date: d, 
             day, dayShort,  dayNumber, dayNumberinWeek, 

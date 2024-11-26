@@ -1,160 +1,189 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useCalendar } from "../../../utils/hooks/useCalendar";
-import { CalendarDay } from "../../index"
+import { CalendarDay, RightBoard } from "../../index";
 import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../../utils/helpers/date";
 import { useTheme } from "../../../context/ThemeContext";
-
+import { CreateDateReturnType} from "../../../types/index";
 
 
 interface CalendarProps { 
     locale?: string;
     selectedDate: Date;
     selectDate: (date: Date) => void;
-    firstWeekDay?: number
+    firstWeekDay?: number;
 }
-
 
 export const Calendar: React.FC<CalendarProps> = ({
     locale = 'default',
     firstWeekDay = 2,
     selectedDate,
-   }) => {
+}) => {
+    const { state, functions } = useCalendar({ firstWeekDay, locale, selectedDate });
+    const { theme } = useTheme();
+
+    const handlePrevStep = () => functions.calendarStepChangeHandler('prev');
+    const handleNextStep = () => functions.calendarStepChangeHandler('next');
+    const handleSetMode = (mode: 'days' | 'monthes' | 'years') => functions.setMode(mode);
     
-  const {state, functions} = useCalendar({firstWeekDay, locale, selectedDate})
-  const {theme} = useTheme()
-  
-  return (
-    
-    <div className="w-3/5 p-40px self-stretch bg-thm-bg">
-        <div className={`pb-40px uppercase  font-semibold text-center text-3xl flex justify-between w-34 ${theme === 'light' ? ' text-additional-txt-color' : 'text-txt-color'} `}>
-          <div aria-hidden className={`arr w-[17px]  bg-arrsvg transition hover:cursor-pointer ${theme}`} onClick={() => functions.calendarStepChangeHandler('prev')}/>
-            {state.mode === 'days' && (
-              <div onClick={() => functions.setMode('monthes')}>
-               {state.monthesNames[state.selectedMonth.monthIndex].month} {state.selectedYear}
-              </div>
-            )}
-            {state.mode === 'monthes' && (
-              <div onClick={() => functions.setMode('years')}>
-                {state.selectedYear} 
-              </div>
-            )}
-            {state.mode === 'years' && (
-              <div onClick={() => functions.setMode('days')}>
-                {state.selectedYearRange[0]} -{' '}
-                {state.selectedYearRange[state.selectedYearRange.length  -1 ]}
-              </div>
-            )}
-          <div aria-hidden className={`arr w-[17px] rotate-180 bg-arrsvg transition hover:cursor-pointer ${theme}`} onClick={() => functions.calendarStepChangeHandler('next')} />
-        </div>
-        <div className="flex flex-wrap ">
-        {state.mode === 'days' && (
-           <>
-            <div className={`w-full grid grid-rows-1 grid-cols-7 pb-40px text-center gap-15px uppercase text-txt-color font-semibold ${theme === 'light' ? ' text-additional-txt-color' : 'text-txt-color'}`}>
-              {state.weekDaysNames.map(weekDaysName => (
-                <div className="" key={weekDaysName.dayShort}>{weekDaysName.dayShort}</div>
-              ))}
-            </div>
-            <div className={`calendar w-full grid grid-rows-1 grid-cols-7 text-center gap-15px overflow-hidden  `}>
-              {state.calendarDaysRender.map(day => {
-                
-              const currentDate = checkCurrentDate(day.date);
-              const isSelectedDay = checkDateEqual(day.date, state.selectedDate.date);
-              const isAdditionalDay = day.monthIndex !== state.selectedMonth.monthIndex;
-              const checkInRange = isDateInRange(day.date, state.selectedDateRange.dateStartRange?.date, state.selectedDateRange.endDate?.date );
-              const startRangeDate = checkDateEqual(day.date, state.selectedDateRange.dateStartRange?.date )
-              const endRangeDate = checkDateEqual(day.date, state.selectedDateRange.endDate?.date )
-              return (
-              <div  draggable
+    const handleDayClick = (day: CreateDateReturnType) => {
+        if (day.monthNumber !== state.selectedMonth.monthNumber) {
+            functions.setSelectedMonthHandler(day.monthIndex);
+        }
+        functions.setDateRangeWithHolidays([]);
+        functions.setSelectedDate(day);
+        functions.setSelectedDayRange({ dateStartRange: null, endDate: null });
+    };
+
+    const handleDragStart = (day: CreateDateReturnType) => {
+        functions.setSelectedDayRange(() => ({ dateStartRange: day, endDate: null }));
+    };
+
+    const handleDragEnter = (day: CreateDateReturnType) => {
+        functions.setSelectedDate(day);
+        functions.setSelectedDayRange(prev => ({ ...prev, endDate: day }));
+    };
+
+    const handleDragEnd = () => functions.getRangeDaysWithHoliday();
+
+    const handleShowHolidays = () => {
+        functions.setEnableHolidaysShow(true);
+        functions.fetchFunction.getHolidays();
+    };
+
+    const renderCalendarDays = () => {
+        return state.calendarDaysRender.map(day => {
+            const currentDate = checkCurrentDate(day.date);
+            const isSelectedDay = checkDateEqual(day.date, state.selectedDate.date);
+            const isAdditionalDay = day.monthIndex !== state.selectedMonth.monthIndex;
+            const checkInRange = isDateInRange(day.date, state.selectedDateRange.dateStartRange?.date, state.selectedDateRange.endDate?.date);
+            const startRangeDate = checkDateEqual(day.date, state.selectedDateRange.dateStartRange?.date);
+            const endRangeDate = checkDateEqual(day.date, state.selectedDateRange.endDate?.date);
+
+            return (
+                <div
+                    draggable
                     className={`date-column w-full flex items-center justify-center relative z-10 ${state.dateRangeReverted ? 'reverted' : ''}`}
                     key={`${day.dayNumber}-${day.monthIndex}`}
-                    onDragStart={() => {
-                      functions.setSelectedDayRange(() => ({ dateStartRange: day, endDate: null}))
-                    }}
-                    onDragEnter={ () => {
-                      functions.setSelectedDate(day)
-                      functions.setSelectedDayRange(prev => ({...prev , endDate: day}))
-                    }
-                    }
-                    onClick={() => {
-                      if(day.monthNumber !== state.selectedMonth.monthNumber){
-                        functions.setSelectedMonthHandler(day.monthIndex)
-                      }
-                      functions.setSelectedDate(day)
-                      functions.setSelectedDayRange({dateStartRange:null, endDate: null})
-                    }}
+                    onDragStart={() => handleDragStart(day)}
+                    onDragEnter={() => handleDragEnter(day)}
+                    onDragEnd={handleDragEnd}
+                    onClick={() => handleDayClick(day)}
                 >
-                <CalendarDay  day={day} 
-                              currentDate={currentDate} 
-                              isSelectedDay={isSelectedDay}
-                              isAdditionalDay={isAdditionalDay} 
-                              checkInRange={checkInRange}   
-                              startRangeDate={startRangeDate}
-                              endRangeDate={endRangeDate}
-                              holiday={day.holiday}
-                             />
-              </div>
-              )
-                 
-              })}
+                    <CalendarDay
+                        day={day}
+                        currentDate={currentDate}
+                        isSelectedDay={isSelectedDay}
+                        isAdditionalDay={isAdditionalDay}
+                        checkInRange={checkInRange}
+                        startRangeDate={startRangeDate}
+                        endRangeDate={endRangeDate}
+                        holiday={day.holiday}
+                    />
+                </div>
+            );
+        });
+    };
+
+    return (
+        <>
+            <RightBoard
+                selectedDate={state.selectedDate.date}
+                selectedMonth={state.selectedMonth.monthName}
+                holidayInformation={state.selectedDate?.holiday}
+                dateRangeWithHolidays={state.dateRangeWithHolidays}
+            />
+            <div className="w-3/5 p-40px self-stretch bg-thm-bg">
+                <div
+                    className={`pb-40px uppercase font-semibold text-center text-3xl flex justify-between w-34 ${theme === 'light' ? 'text-additional-txt-color' : 'text-txt-color'}`}
+                >
+                    <div
+                        aria-hidden
+                        className={`arr w-[17px] bg-arrsvg transition hover:cursor-pointer ${theme}`}
+                        onClick={handlePrevStep}
+                    />
+                    {state.mode === 'days' && (
+                        <div onClick={() => handleSetMode('monthes')}>
+                            {state.monthesNames[state.selectedMonth.monthIndex].month} {state.selectedYear}
+                        </div>
+                    )}
+                    {state.mode === 'monthes' && (
+                        <div onClick={() => handleSetMode('years')}>{state.selectedYear}</div>
+                    )}
+                    {state.mode === 'years' && (
+                        <div onClick={() => handleSetMode('days')}>
+                            {state.selectedYearRange[0]} - {state.selectedYearRange[state.selectedYearRange.length - 1]}
+                        </div>
+                    )}
+                    <div
+                        aria-hidden
+                        className={`arr w-[17px] rotate-180 bg-arrsvg transition hover:cursor-pointer ${theme}`}
+                        onClick={handleNextStep}
+                    />
+                </div>
+                <div className="flex flex-wrap">
+                    {state.mode === 'days' && (
+                        <>
+                            <div className={`w-full grid grid-rows-1 grid-cols-7 pb-40px text-center gap-15px uppercase text-txt-color font-semibold ${theme === 'light' ? 'text-additional-txt-color' : 'text-txt-color'}`}>
+                                {state.weekDaysNames.map(weekDaysName => (
+                                    <div key={weekDaysName.dayShort}>{weekDaysName.dayShort}</div>
+                                ))}
+                            </div>
+                            <div className="calendar w-full grid grid-rows-1 grid-cols-7 text-center gap-15px overflow-hidden">
+                                {renderCalendarDays()}
+                            </div>
+                        </>
+                    )}
+                    {state.mode === 'monthes' && (
+                        <div className="calendar__pick__items__container">
+                            {state.monthesNames.map(monthesName => {
+                                const currentMonth = new Date().getMonth() === monthesName.monthIndex && new Date().getFullYear() === state.selectedYear;
+                                const isSelectedMonth = monthesName.monthIndex === state.selectedMonth.monthIndex;
+
+                                return (
+                                    <div
+                                        className={[
+                                            'calendar__pick__item',
+                                            currentMonth ? 'calendar__today__item' : '',
+                                            isSelectedMonth ? 'calendar__selected__item' : ''
+                                        ].join(' ')}
+                                        key={monthesName.monthShort}
+                                        onClick={() => {
+                                            functions.setSelectedMonthHandler(monthesName.monthIndex);
+                                            functions.setMode('days');
+                                        }}
+                                    >
+                                        {monthesName.monthShort}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                    {state.mode === 'years' && (
+                        <div className="">
+                            <div>{state.selectedYearRange[0] - 1}</div>
+                            {state.selectedYearRange.map((selectedYearItem) => {
+                                const currentYear = new Date().getFullYear() === selectedYearItem;
+                                const isSelectedYear = state.selectedYear === selectedYearItem;
+
+                                return (
+                                    <div
+                                        key={selectedYearItem}
+                                        className={`${currentYear ? '' : ''} ${isSelectedYear ? '' : ''}`}
+                                        onClick={() => {
+                                            functions.setMode('monthes');
+                                            functions.setSelectedYear(selectedYearItem);
+                                        }}
+                                    >
+                                        {selectedYearItem}
+                                    </div>
+                                );
+                            })}
+                            <div>{state.selectedYearRange[state.selectedYearRange.length - 1] + 1}</div>
+                        </div>
+                    )}
+                </div>
+                <button onClick={handleShowHolidays}>Show holidays</button>
             </div>
-           </> 
-        )}
-        {state.mode === 'monthes' && (
-          <div className="calendar__pick__items__container">
-            {state.monthesNames.map(monthesName => {
-
-              const currentMonth = 
-                    new Date().getMonth() === monthesName.monthIndex &&
-                    new Date().getFullYear() === state.selectedYear;
-              const isSelectedMonth = monthesName.monthIndex === state.selectedMonth.monthIndex
-
-              return <div className={[
-                  'calendar__pick__item',
-                  currentMonth ? 'calendar__today__item' : '',
-                  isSelectedMonth ? 'calendar__selected__item' : ''
-                  ].join(' ')}
-                  key={monthesName.monthShort}
-                  onClick={() => {
-                    functions.setSelectedMonthHandler(monthesName.monthIndex)
-                    functions.setMode('days')
-                  }}
-                  >
-                  {monthesName.monthShort}</div>
-              
-            })}
-          </div>
-        ) }
-        {state.mode === 'years' && (
-          <div className="">
-            <div className="">{state.selectedYearRange[0] - 1 }</div>
-            {state.selectedYearRange.map((selectedYearItem) => {
-
-              const currentYear = new Date().getFullYear() === selectedYearItem
-              const isSelectedYear = state.selectedYear === selectedYearItem
-
-              return (
-              <div  className={[
-                '',
-                currentYear ? '' : ' ',
-                isSelectedYear ? '' : ' ',
-              ].join(' ')}
-                    onClick={() => {
-                      functions.setMode('monthes');
-                      functions.setSelectedYear(selectedYearItem)
-                }}>{selectedYearItem}</div>
-            )
-            })}
-            <div className="">{state.selectedYearRange[state.selectedYearRange.length - 1] + 1 }</div>
-          </div>
-        )}
-        </div>
-        <button onClick={() => {
-          functions.setEnableHolidaysShow(true)
-          functions.fetchFunction.getHolidays
-          }}>
-              Show holidays
-        </button>
-    </div>
-  )
-  
-}
+        </>
+    );
+};
