@@ -2,6 +2,7 @@ import React from 'react'
 import './static/css/global.css';
 import { Calendar } from './components/index'
 import { useTheme  } from './context/ThemeContext';
+import { CalendarDayTasksContextProvider } from './context/CalendarDayTasksContext';
 
 export const  App: React.FC = () => {
   
@@ -9,7 +10,8 @@ export const  App: React.FC = () => {
   const [selectedDate, selectDate] = React.useState(new Date())
   const currentLocale = navigator.language
 
-  return (  
+  return (
+    <CalendarDayTasksContextProvider currentDate={selectedDate}>  
     <>
       <div className={`${theme} main_calendar_wrapper flex justify-center h-screen items-center `}>
         <div className='w-full max-w-screen-lg flex justify-center items-center h-550px shadow-custom rounded-xl'>
@@ -18,6 +20,7 @@ export const  App: React.FC = () => {
         </div>
       </div>
     </>
+    </CalendarDayTasksContextProvider> 
   )
 }
 

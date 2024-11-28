@@ -2,10 +2,12 @@ import React from "react";
 import { createMonth, createDate, getMonthesNames, getWeekDaysNames, getMonthNumberOfDays } from "../helpers/date/index";
 import { useHolidayFetchHandler } from "./useHoliday";
 import { CreateDateReturnType, Holiday } from "../../types/index";
+import { useCalendarDayTasksContext } from "../../context/CalendarDayTasksContext";
+
 
 interface useCalendarParams {
-    locale: string;
-    selectedDate: Date;
+    locale?: string;
+    selectedDate?: Date;
     firstWeekDay?: number
 }
 
@@ -16,11 +18,12 @@ const getYearsRange = (year: number) => {
 
 
 export const useCalendar = ({
-    locale,
+    locale = 'default',
     selectedDate: date,
     firstWeekDay = 2
 }: useCalendarParams) => {
-    
+    const {dayWithTask} = useCalendarDayTasksContext()
+
     const [mode, setMode] = React.useState<'days' | 'monthes' | 'years'>('days')
 
     const [selectedDate, setSelectedDate] = React.useState(createDate({ date }))
@@ -94,6 +97,7 @@ export const useCalendar = ({
             calendarResult[i] = nextMonthDays[i - totalCalendarDays + numberOfNextMonth]
         }
         
+
         if (holidaysState.isSuccess && holidaysState.data) {
             const holidays = holidaysState.data.response.holidays;
             return calendarResult.map(day => {
@@ -102,9 +106,19 @@ export const useCalendar = ({
             });
         }
 
+        if(dayWithTask.length) {
+            return calendarResult.map(day => {
+                const dayWithTaskArr = dayWithTask.find(dayWithTask => day.iso === dayWithTask?.iso) 
+                // dayWithTaskArr ? setSelectedDate(prev => ({...prev,newTask: dayWithTaskArr.newTask})) : day
+                return dayWithTaskArr ? { ...day, newTask: dayWithTaskArr.newTask } : day 
+                }
+            );
+        }   
+
         return calendarResult
 
-    }, [selectedMonth.year, selectedMonth.monthIndex, selectedYear, holidaysState.data, enableHolidaysShow])
+    }, [selectedMonth.year, selectedMonth.monthIndex, selectedYear, holidaysState.data, enableHolidaysShow, dayWithTask])
+  
 
     const calendarStepChangeHandler = (direction: 'prev' | 'next') => {
 
@@ -206,7 +220,7 @@ export const useCalendar = ({
             setDateGetRange([])
         }
     }, [selectedDateRange.dateStartRange, selectedDateRange.endDate]);
-    
+
     React.useEffect(() => {
         setCalendarDayRender(calendarDaysToShow);
     }, [calendarDaysToShow]);
@@ -215,7 +229,6 @@ export const useCalendar = ({
         enableHolidaysShow && fetchFunction.getHolidays();
     }, [selectedMonth, selectedYear, enableHolidaysShow]);
 
- 
     return {
         state: {
             mode,

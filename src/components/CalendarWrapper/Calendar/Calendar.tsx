@@ -4,6 +4,7 @@ import { CalendarDay, RightBoard } from "../../index";
 import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../../utils/helpers/date";
 import { useTheme } from "../../../context/ThemeContext";
 import { CreateDateReturnType} from "../../../types/index";
+import { useCalendarDayTasksContext } from "../../../context/CalendarDayTasksContext";
 
 
 interface CalendarProps { 
@@ -18,8 +19,11 @@ export const Calendar: React.FC<CalendarProps> = ({
     firstWeekDay = 2,
     selectedDate,
 }) => {
+
     const { state, functions } = useCalendar({ firstWeekDay, locale, selectedDate });
     const { theme } = useTheme();
+
+    const {setTaskForCurrentDay} = useCalendarDayTasksContext()
 
     const handlePrevStep = () => functions.calendarStepChangeHandler('prev');
     const handleNextStep = () => functions.calendarStepChangeHandler('next');
@@ -32,6 +36,8 @@ export const Calendar: React.FC<CalendarProps> = ({
         functions.setDateRangeWithHolidays([]);
         functions.setSelectedDate(day);
         functions.setSelectedDayRange({ dateStartRange: null, endDate: null });
+        setTaskForCurrentDay(day)
+
     };
 
     const handleDragStart = (day: CreateDateReturnType) => {
@@ -83,7 +89,7 @@ export const Calendar: React.FC<CalendarProps> = ({
             );
         });
     };
-
+    console.log('state', state)
     return (
         <>
             <RightBoard
@@ -91,6 +97,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                 selectedMonth={state.selectedMonth.monthName}
                 holidayInformation={state.selectedDate?.holiday}
                 dateRangeWithHolidays={state.dateRangeWithHolidays}
+                taskArr= {state.selectedDate.newTask}              
             />
             <div className="w-3/5 p-40px self-stretch bg-thm-bg">
                 <div

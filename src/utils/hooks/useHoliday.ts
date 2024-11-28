@@ -27,8 +27,6 @@ export const useHolidayFetchHandler = ({ year, month, country }: HolidayFetchHan
           `${holidayApiUrl}?&api_key=${holidayApiKey}&country=${country?.split("-")[1]}&year=${year}&month=${month}`
     );
 
-
-
     if (!response.ok) {
       throw new Error(`Failed to fetch holidays: ${response.statusText}`);
     }
@@ -71,7 +69,6 @@ export const useHolidayFetchHandler = ({ year, month, country }: HolidayFetchHan
       isLoading,
       error: error ? error : null,
       isSuccess,
-      
     },
     fetchFunction: {
       getHolidays, 

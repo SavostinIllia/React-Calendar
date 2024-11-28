@@ -2,8 +2,8 @@ import { CreateDateReturnType } from "../../../types/CreateDateReturnType";
 import { getWeekNumber } from "./getWeekNumber";
 
 interface createDateparams {
-    locale?: string,
-    date? : Date
+    locale?: string;
+    date? : Date;
 }
 
 

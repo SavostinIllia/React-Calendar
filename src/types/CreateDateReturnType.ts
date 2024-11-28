@@ -16,4 +16,5 @@ export interface CreateDateReturnType{
         iso: string;
         week: number;
         holiday?: Holiday;
+        newTask?: { task: string }[];
 }
