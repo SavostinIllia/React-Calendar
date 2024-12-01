@@ -22,11 +22,13 @@ export const useCalendar = ({
     selectedDate: date,
     firstWeekDay = 2
 }: useCalendarParams) => {
+     
     const {dayWithTask} = useCalendarDayTasksContext()
 
     const [mode, setMode] = React.useState<'days' | 'monthes' | 'years'>('days')
 
     const [selectedDate, setSelectedDate] = React.useState(createDate({ date }))
+
     const [selectedDateRange, setSelectedDayRange] = React.useState<{
         dateStartRange: null | ReturnType<typeof createDate>;
         endDate: null | ReturnType<typeof createDate>;
@@ -109,8 +111,7 @@ export const useCalendar = ({
         if(dayWithTask.length) {
             return calendarResult.map(day => {
                 const dayWithTaskArr = dayWithTask.find(dayWithTask => day.iso === dayWithTask?.iso) 
-                // dayWithTaskArr ? setSelectedDate(prev => ({...prev,newTask: dayWithTaskArr.newTask})) : day
-                return dayWithTaskArr ? { ...day, newTask: dayWithTaskArr.newTask } : day 
+                return dayWithTaskArr ? { ...day, tasksListFortheDay: dayWithTaskArr.tasksListFortheDay } : day 
                 }
             );
         }   
@@ -118,7 +119,6 @@ export const useCalendar = ({
         return calendarResult
 
     }, [selectedMonth.year, selectedMonth.monthIndex, selectedYear, holidaysState.data, enableHolidaysShow, dayWithTask])
-  
 
     const calendarStepChangeHandler = (direction: 'prev' | 'next') => {
 

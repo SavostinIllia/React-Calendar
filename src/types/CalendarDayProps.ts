@@ -1,4 +1,4 @@
-import { CreateDateReturnType, Holiday} from "./index";
+import { CreateDateReturnType, Holiday, TaskListItem} from "./index";
 
 export interface CalendarDayProps {
     day: CreateDateReturnType;
@@ -9,5 +9,5 @@ export interface CalendarDayProps {
     startRangeDate? : boolean;
     endRangeDate? : boolean;
     holiday?: Holiday
-
+    tasksListFortheDay? : TaskListItem[]
 }

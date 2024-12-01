@@ -23,7 +23,7 @@ export const Calendar: React.FC<CalendarProps> = ({
     const { state, functions } = useCalendar({ firstWeekDay, locale, selectedDate });
     const { theme } = useTheme();
 
-    const {setTaskForCurrentDay} = useCalendarDayTasksContext()
+    const {setCurrentDayFromCalendar} = useCalendarDayTasksContext()
 
     const handlePrevStep = () => functions.calendarStepChangeHandler('prev');
     const handleNextStep = () => functions.calendarStepChangeHandler('next');
@@ -33,11 +33,11 @@ export const Calendar: React.FC<CalendarProps> = ({
         if (day.monthNumber !== state.selectedMonth.monthNumber) {
             functions.setSelectedMonthHandler(day.monthIndex);
         }
+        functions.setSelectedDate(day);
         functions.setDateRangeWithHolidays([]);
         functions.setSelectedDate(day);
         functions.setSelectedDayRange({ dateStartRange: null, endDate: null });
-        setTaskForCurrentDay(day)
-
+        setCurrentDayFromCalendar(day)
     };
 
     const handleDragStart = (day: CreateDateReturnType) => {
@@ -84,6 +84,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                         startRangeDate={startRangeDate}
                         endRangeDate={endRangeDate}
                         holiday={day.holiday}
+                        tasksListFortheDay={day.tasksListFortheDay}
                     />
                 </div>
             );
@@ -93,13 +94,11 @@ export const Calendar: React.FC<CalendarProps> = ({
     return (
         <>
             <RightBoard
-                selectedDate={state.selectedDate.date}
-                selectedMonth={state.selectedMonth.monthName}
+                selectedDate={state.selectedDate}
                 holidayInformation={state.selectedDate?.holiday}
-                dateRangeWithHolidays={state.dateRangeWithHolidays}
-                taskArr= {state.selectedDate.newTask}              
+                dateRangeWithHolidays={state.dateRangeWithHolidays}               
             />
-            <div className="w-3/5 p-40px self-stretch bg-thm-bg">
+            <div className="w-3/5 p-40px self-stretch">
                 <div
                     className={`pb-40px uppercase font-semibold text-center text-3xl flex justify-between w-34 ${theme === 'light' ? 'text-additional-txt-color' : 'text-txt-color'}`}
                 >

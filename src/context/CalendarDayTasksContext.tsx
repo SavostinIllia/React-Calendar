@@ -3,10 +3,10 @@ import { createDate } from '../utils/helpers/date';
 import { CreateDateReturnType } from '../types';
 
 interface CalendarDayTasksContextParams {
-  currentDayWithTask: CreateDateReturnType;
-  setTaskForCurrentDay: (day: CreateDateReturnType) => void;
+  setCurrentDayFromCalendar: (day: CreateDateReturnType) => void;
   setTaskForSelectedDay: (val: string) => void;
-  dayWithTask: CreateDateReturnType[]
+  dayWithTask: CreateDateReturnType[];
+  removeTaskFromCurrentDay: (day:CreateDateReturnType, id:number) => void
 }
 
 const CalendarDayTasksContext = createContext<CalendarDayTasksContextParams | undefined>(undefined);
@@ -17,35 +17,57 @@ interface CalendarDayTasksContextProps {
 }
 
 export const CalendarDayTasksContextProvider: React.FC<CalendarDayTasksContextProps> = ({ children }) => {
-  const [currentDayWithTask, setCurrentDay] = useState<CreateDateReturnType>(() => createDate({date : new Date()}));
+  const [currentDay, setCurrentDay] = useState<CreateDateReturnType>(() => createDate({date : new Date()}));
   const [dayWithTask, setDayWithTask] = useState<CreateDateReturnType[]>([])
 
-  const setTaskForCurrentDay = (day: CreateDateReturnType) => {
+  const setCurrentDayFromCalendar = (day: CreateDateReturnType) => {
     setCurrentDay(() => createDate(day));
   };
 
   const setTaskForSelectedDay = (val: string) => {
-    const newTask = { task: val };
+    const tasksListFortheDay = { 
+      task: val ,
+      time: new Date().toLocaleTimeString([], {
+        hourCycle: 'h23',
+        hour: '2-digit',
+        minute: '2-digit'
+    }),
+      id: currentDay.timeStamp + Math.floor(Math.random() * 1000)
+    };
   
     setDayWithTask((prev) => {
-    
-      const existingDay = prev.find((item) => item.iso === currentDayWithTask.iso);
+  
+      const existingDay = prev.find((item) => item.iso === currentDay.iso);
   
       if (existingDay) {
         return prev.map((item) =>
-          item.iso === currentDayWithTask.iso
-            ? { ...item, newTask: [...(item.newTask || []), newTask] }
+          item.iso === currentDay.iso
+            ? { ...item, tasksListFortheDay: [...(item.tasksListFortheDay || []), tasksListFortheDay] }
             : item
         );
       } else {
 
-        return [...prev, { ...currentDayWithTask, newTask: [newTask] }];
+        return [...prev, { ...currentDay, tasksListFortheDay: [tasksListFortheDay] }];
       }
     });
   };
 
+  const removeTaskFromCurrentDay = (day: CreateDateReturnType, taskId: number) => {
+    debugger
+    setDayWithTask((prevDayWithTask) =>
+      prevDayWithTask.map((item) =>
+        item.iso === day.iso
+          ? { ...item, tasksListFortheDay: item.tasksListFortheDay?.filter((task) => task.id !== taskId) }
+          : item
+      )
+    );
+  };
+
+
+  
+
   return (
-    <CalendarDayTasksContext.Provider value={{ currentDayWithTask, setTaskForCurrentDay,  setTaskForSelectedDay, dayWithTask }}>
+    <CalendarDayTasksContext.Provider value={{ setCurrentDayFromCalendar,  setTaskForSelectedDay, dayWithTask, removeTaskFromCurrentDay }}>
       {children}
     </CalendarDayTasksContext.Provider>
   );

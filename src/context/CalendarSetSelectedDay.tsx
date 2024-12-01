@@ -1,27 +1,33 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface CalendarSetSelectedDay {
-
+    selectedDateContext: Date;
+    selectDay: (day: Date) => void;
 }
 
-const CalendarDayTasksContext = createContext<CalendarSetSelectedDay | undefined>(undefined);
+const CalendarSetSelectedDay = createContext<CalendarSetSelectedDay | undefined>(undefined);
 
 interface CalendarSetSelectedDayProps {
   children: ReactNode;
-  currentDate: Date;
+  
 }
 
 export const CalendarSetSelectedDayProvider: React.FC<CalendarSetSelectedDayProps> = ({ children }) => {
+    const [selectedDateContext, setSelectedDate] = useState(new Date())
 
-  return (
-    <CalendarDayTasksContext.Provider value={{}}>
-      {children}
-    </CalendarDayTasksContext.Provider>
-  );
+    const selectDay = (day:Date) => {
+        setSelectedDate(day)
+    }
+
+    return (
+        <CalendarSetSelectedDay.Provider value={{selectedDateContext, selectDay}}>
+            {children}
+        </CalendarSetSelectedDay.Provider>
+    );
 };
 
-export const useCalendarDayTasksContext = () => {
-  const context = useContext(CalendarDayTasksContext);
+export const useCalendarSetSelectedDayProvider = () => {
+  const context = useContext(CalendarSetSelectedDay);
   if (!context) {
     throw new Error("useCalendarDayTasksContext must be used within a CalendarDayTasksContextProvider");
   }

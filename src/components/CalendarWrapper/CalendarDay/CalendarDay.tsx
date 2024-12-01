@@ -9,6 +9,7 @@ export const CalendarDay:React.FC<CalendarDayProps> = ({
     holiday,
     startRangeDate,
     endRangeDate,
+    tasksListFortheDay,
 
  }) => {
         return (
@@ -22,6 +23,7 @@ export const CalendarDay:React.FC<CalendarDayProps> = ({
                 holiday ? '' : '',
                 startRangeDate ? "start_range" : '',
                 endRangeDate ? "end_range overflow-hidden !opacity-100" : '',
+                tasksListFortheDay ? 'day__with_task' : '',
                 ].join(' ')}
             >
             {holiday && <span> hiloday</span>}

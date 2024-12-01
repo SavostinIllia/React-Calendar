@@ -12,14 +12,20 @@ export default {
         currentDay: "var(--current-day)",
         "additional-txt-color": "var(--additional-txt-color)",
         "flat-orange": "var(--flat-orange)",
+        "board-bg": "var(--board-bg)",
       },
       backgroundImage: {
         arrsvg: "url('./static/images/arrow_white.svg')",
+        checksvg: "url('./static/images/check.svg')",
+        trashsvg: "url('./static/images/trash.svg')",
+        "thm-gradient": "var(--thm-gradient)",
       },
       spacing: {
         "550px": "550px",
+        "410px": "410px",
       },
       padding: {
+        "10px": "10px",
         "20px": "20px",
         "40px": "40px",
       },
@@ -28,9 +34,11 @@ export default {
       },
       borderRadius: {
         "l-24px": "24px 0 0 24px",
+        "g-24px": "24px",
       },
       boxShadow: {
-        custom: "0px 0px 38px -2px rgba(66, 68, 90, 0.5);",
+        custom: "0px 25px 45px rgba(0,0,0, 0.3);",
+        inputShadow: "0px -2px 10px 0px rgba(66, 68, 90, 1);",
       },
     },
   },
