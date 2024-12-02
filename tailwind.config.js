@@ -13,16 +13,18 @@ export default {
         "additional-txt-color": "var(--additional-txt-color)",
         "flat-orange": "var(--flat-orange)",
         "board-bg": "var(--board-bg)",
+        violet: "var(--violet)",
       },
       backgroundImage: {
         arrsvg: "url('./static/images/arrow_white.svg')",
-        checksvg: "url('./static/images/check.svg')",
+        addsvg: "url('./static/images/add.svg')",
         trashsvg: "url('./static/images/trash.svg')",
         "thm-gradient": "var(--thm-gradient)",
       },
       spacing: {
         "550px": "550px",
         "410px": "410px",
+        "300px": "300px",
       },
       padding: {
         "10px": "10px",

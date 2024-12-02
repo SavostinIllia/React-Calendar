@@ -53,15 +53,21 @@ export const CalendarDayTasksContextProvider: React.FC<CalendarDayTasksContextPr
   };
 
   const removeTaskFromCurrentDay = (day: CreateDateReturnType, taskId: number) => {
-    debugger
     setDayWithTask((prevDayWithTask) =>
-      prevDayWithTask.map((item) =>
-        item.iso === day.iso
-          ? { ...item, tasksListFortheDay: item.tasksListFortheDay?.filter((task) => task.id !== taskId) }
-          : item
-      )
+      prevDayWithTask
+        .map((item) => {
+          if (item.iso === day.iso) {
+            const updatedTasks = item.tasksListFortheDay?.filter((task) => task.id !== taskId) || [];
+            return updatedTasks.length > 0
+              ? { ...item, tasksListFortheDay: updatedTasks }
+              : { ...item, tasksListFortheDay: undefined };
+          }
+          return item;
+        })
+        .filter((item) => item.tasksListFortheDay !== undefined)
     );
   };
+  
 
 
   

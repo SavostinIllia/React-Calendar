@@ -22,12 +22,11 @@ export const useCalendar = ({
     selectedDate: date,
     firstWeekDay = 2
 }: useCalendarParams) => {
-     
     const {dayWithTask} = useCalendarDayTasksContext()
 
     const [mode, setMode] = React.useState<'days' | 'monthes' | 'years'>('days')
 
-    const [selectedDate, setSelectedDate] = React.useState(createDate({ date }))
+    const [selectedDate, setSelectedDate] = React.useState(createDate({locale, date }))
 
     const [selectedDateRange, setSelectedDayRange] = React.useState<{
         dateStartRange: null | ReturnType<typeof createDate>;

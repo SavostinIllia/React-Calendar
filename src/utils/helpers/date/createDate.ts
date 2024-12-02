@@ -8,7 +8,6 @@ interface createDateparams {
 
 
 export const createDate = (params? : createDateparams) : CreateDateReturnType => {
-      
       const locale = params?.locale ?? 'default';
 
       const d = params?.date ?? new Date()

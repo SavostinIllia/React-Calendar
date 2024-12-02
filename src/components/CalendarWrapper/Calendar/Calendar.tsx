@@ -19,7 +19,6 @@ export const Calendar: React.FC<CalendarProps> = ({
     firstWeekDay = 2,
     selectedDate,
 }) => {
-
     const { state, functions } = useCalendar({ firstWeekDay, locale, selectedDate });
     const { theme } = useTheme();
 
@@ -90,13 +89,14 @@ export const Calendar: React.FC<CalendarProps> = ({
             );
         });
     };
-    console.log('state', state)
+
     return (
         <>
             <RightBoard
                 selectedDate={state.selectedDate}
                 holidayInformation={state.selectedDate?.holiday}
-                dateRangeWithHolidays={state.dateRangeWithHolidays}               
+                dateRangeWithHolidays={state.dateRangeWithHolidays}
+                selectedDateRange={state.selectedDateRange}               
             />
             <div className="w-3/5 p-40px self-stretch">
                 <div
