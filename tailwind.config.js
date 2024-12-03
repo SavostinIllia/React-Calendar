@@ -29,6 +29,7 @@ export default {
       padding: {
         "10px": "10px",
         "20px": "20px",
+        30: "30px",
         "40px": "40px",
       },
       gap: {
@@ -41,6 +42,7 @@ export default {
       boxShadow: {
         custom: "0px 25px 45px rgba(0,0,0, 0.3);",
         inputShadow: "0px -2px 10px 0px rgba(66, 68, 90, 1);",
+        xxs: "1px 1px 1px 1px rgba(0,0,0, .2);",
       },
     },
   },
