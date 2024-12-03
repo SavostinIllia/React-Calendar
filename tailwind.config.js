@@ -9,7 +9,7 @@ export default {
         turquoise: "var(--turqoise)",
         "txt-color": "var(--text-color)",
         "thm-bg": "var(--thm-bg)",
-        currentDay: "var(--current-day)",
+        "current-day": "var(--current-day)",
         "additional-txt-color": "var(--additional-txt-color)",
         "flat-orange": "var(--flat-orange)",
         "board-bg": "var(--board-bg)",
@@ -22,8 +22,8 @@ export default {
         "thm-gradient": "var(--thm-gradient)",
       },
       spacing: {
-        "550px": "550px",
-        "410px": "410px",
+        "700px": "700px",
+        "450px": "450px",
         "300px": "300px",
       },
       padding: {

@@ -14,7 +14,7 @@ export const  App: React.FC = () => {
     <CalendarDayTasksContextProvider currentDate={selectedDate}>  
     <>
       <div className={`bg-thm-gradient main_calendar_wrapper flex justify-center h-screen items-center `}>
-        <div className='w-full max-w-screen-lg flex justify-center items-center h-550px shadow-custom rounded-xl overflow-hidden bg-black/[0.1] border-white/50 border-r-white/20 border-b-white/20'>
+        <div className='w-full max-w-screen-lg flex justify-center items-center h-700px shadow-custom rounded-xl overflow-hidden bg-black/[0.1] border-white/50 border-r-white/20 border-b-white/20'>
         <Calendar locale={currentLocale} selectDate={selectDate} selectedDate={selectedDate}/>
         <button onClick={toggleTheme}> lkl</button>
         </div>

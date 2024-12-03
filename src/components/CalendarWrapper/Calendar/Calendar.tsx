@@ -5,6 +5,7 @@ import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../../utils/
 import { useTheme } from "../../../context/ThemeContext";
 import { CreateDateReturnType} from "../../../types/index";
 import { useCalendarDayTasksContext } from "../../../context/CalendarDayTasksContext";
+import SvgIcon from "../../SvgIcon/SvgIcon";
 
 
 interface CalendarProps { 
@@ -188,7 +189,9 @@ export const Calendar: React.FC<CalendarProps> = ({
                         </div>
                     )}
                 </div>
-                <button onClick={handleShowHolidays}>Show holidays</button>
+                <button className="rounded-md bg-black/10 py-[5px] px-[10px] text-white border-transparent border-r-white/20 border-b-white/20 outline-none block ml-auto" onClick={handleShowHolidays}>
+                    {state.isLoading ? <SvgIcon name="spinner" className=" transition animate-spin" /> : 'Show hollidays'}
+                </button>
             </div>
         </>
     );

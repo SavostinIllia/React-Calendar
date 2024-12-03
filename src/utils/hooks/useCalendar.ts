@@ -241,7 +241,8 @@ export const useCalendar = ({
             dateGetRange,
             selectedDateRange,
             dateRangeReverted,
-            dateRangeWithHolidays
+            dateRangeWithHolidays,
+            isLoading : holidaysState.isLoading
         },
         functions: {
             setMode,

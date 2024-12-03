@@ -1,5 +1,5 @@
 
-import React from "react";
+import React , {useState}from "react";
 import { CreateDateReturnType, Holiday } from "../../../types"
 import { CalendarDayTaskSetter } from "./CalendarDayTaskSetter";
 import { useCalendarDayTasksContext } from "../../../context";
@@ -19,6 +19,8 @@ interface RightBoardCalendarProps {
 export const RightBoard = ({ selectedDate, holidayInformation,  dateRangeWithHolidays, selectedDateRange}:RightBoardCalendarProps) => {
 
     const {dayWithTask} = useCalendarDayTasksContext()
+    const [boardMinify, setBoardMinify] = useState(false);
+
 
     const holidaysInDateRange = React.useMemo(() => {
         if (!dateRangeWithHolidays || dateRangeWithHolidays.length === 0) return null;
@@ -34,16 +36,15 @@ export const RightBoard = ({ selectedDate, holidayInformation,  dateRangeWithHol
                 </ul>
             </>
         )
-        
 
     }, [dateRangeWithHolidays]);    
 
     const renderDayTasks = React.useMemo(() => {
         if (dayWithTask.length){
             return(
-                <div className="task__wrapper relative h-full max-h-300px overflow-y-auto pr-2">
+                <div className={`task__wrapper relative h-full ${holidayInformation ? "max-h-[330px]" : "max-h-[440px]"} overflow-y-auto pr-2`}>
                     {dayWithTask.length && dayWithTask.findIndex(item => item.iso === selectedDate.iso) >= 0 
-                    ? <h3 className="taskslist__text text-turquoise text-4xl mb-4 ">Tasks for Today</h3> 
+                    ? <h3 className="taskslist__text text-turquoise text-4xl mb-2 pb-3 ">Tasks for Today</h3> 
                     : ''} 
                     {dayWithTask.map(day => {
                         if(day.iso === selectedDate.iso){  
@@ -59,7 +60,6 @@ export const RightBoard = ({ selectedDate, holidayInformation,  dateRangeWithHol
         }
     }, [dayWithTask, selectedDate])
 
-    console.log('dayWithTask', dayWithTask)
 
     return (
         <>
@@ -83,11 +83,12 @@ export const RightBoard = ({ selectedDate, holidayInformation,  dateRangeWithHol
                     <h2 className="text-3xl">{selectedDate.day}</h2>
                 </>
                 )}
+
                 </div>
                 {holidaysInDateRange || (holidayInformation?.name && 
-                    <div className="text-txt-color">
+                    <div className="text-txt-color mb-5">
                         <h3 className="holliday__text text-violet text-4xl mb-4 ">Holiday this day</h3>
-                        <p className="bg-black/[0.1] rounded-lg py-[5px] px-[10px] mb-4 text-xl">{holidayInformation.name}</p>
+                        <p className="bg-black/[0.1] rounded-lg py-[5px] px-[10px] text-xl">{holidayInformation.name}</p>
                     </div>
                 )}
 
