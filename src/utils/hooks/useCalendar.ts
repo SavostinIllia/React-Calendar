@@ -1,7 +1,7 @@
 import React from "react";
 import { createMonth, createDate, getMonthesNames, getWeekDaysNames, getMonthNumberOfDays } from "../helpers/date/index";
 import { useHolidayFetchHandler } from "./useHoliday";
-import { CreateDateReturnType, Holiday, TaskListItem } from "../../types/index";
+import { CreateDateReturnType, Holiday } from "../../types/index";
 import { useCalendarDayTasksContext } from "../../context/CalendarDayTasksContext";
 
 
@@ -38,7 +38,6 @@ export const useCalendar = ({
 
     const [dateRangeReverted, setDateRangeReverted] = React.useState(false)
     const [dateRangeWithHolidays, setDateRangeWithHolidays] = React.useState<Holiday[]>([])
-    const [dateRangeWithTasks, setDateRangeWithTasks] = React.useState<CreateDateReturnType[]>([])
 
     const [selectedMonth, setSelectedMonth] = React.useState(
         createMonth({ date: new Date(selectedDate.year, selectedDate.monthIndex), locale })
@@ -184,25 +183,6 @@ export const useCalendar = ({
         }
     }, [dateGetRange])
 
-    const getRangeDaysWithTasks = React.useCallback(() => {
-        if (dayWithTask && dayWithTask.length ) {
-        
-            const daysWithTasks : CreateDateReturnType[] = []
-            dateGetRange.map(day =>{
-                const matchingTasks = dayWithTask.find(task => `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}` === task.iso)
-                
-                if(matchingTasks) {
-                    daysWithTasks.push(matchingTasks)
-                }
-
-                return daysWithTasks
-
-            })
-            
-            setDateRangeWithTasks(daysWithTasks)
-        }
-        
-    }, [dateGetRange])
 
     React.useEffect(() => {
         let dateArray = [];
@@ -256,7 +236,6 @@ export const useCalendar = ({
             selectedDateRange,
             dateRangeReverted,
             dateRangeWithHolidays,
-            dateRangeWithTasks,
             isLoading : holidaysState.isLoading
         },
         functions: {
@@ -270,7 +249,6 @@ export const useCalendar = ({
             setEnableHolidaysShow,
             setDateRangeWithHolidays,
             getRangeDaysWithHoliday,
-            getRangeDaysWithTasks,
             fetchFunction,
         }
     }
