@@ -1,7 +1,7 @@
 import React from "react";
 import { createMonth, createDate, getMonthesNames, getWeekDaysNames, getMonthNumberOfDays } from "../helpers/date/index";
 import { useHolidayFetchHandler } from "./useHoliday";
-import { CreateDateReturnType, Holiday } from "../../types/index";
+import { CreateDateReturnType, Holiday, TaskListItem } from "../../types/index";
 import { useCalendarDayTasksContext } from "../../context/CalendarDayTasksContext";
 
 
@@ -38,6 +38,7 @@ export const useCalendar = ({
 
     const [dateRangeReverted, setDateRangeReverted] = React.useState(false)
     const [dateRangeWithHolidays, setDateRangeWithHolidays] = React.useState<Holiday[]>([])
+    const [dateRangeWithTasks, setDateRangeWithTasks] = React.useState<CreateDateReturnType[]>([])
 
     const [selectedMonth, setSelectedMonth] = React.useState(
         createMonth({ date: new Date(selectedDate.year, selectedDate.monthIndex), locale })
@@ -99,23 +100,16 @@ export const useCalendar = ({
         }
         
 
-        if (holidaysState.isSuccess && holidaysState.data) {
-            const holidays = holidaysState.data.response.holidays;
-            return calendarResult.map(day => {
-                const matchingHoliday = holidays.find(holiday => holiday.date.iso.split('T')[0] === day?.iso) 
-                return matchingHoliday ? { ...day, holiday: matchingHoliday } : day;
-            });
-        }
+        return calendarResult.map(day => {
+            const matchingHoliday = holidaysState.isSuccess && holidaysState.data?.response.holidays.find(holiday => holiday.date.iso.split('T')[0] === day?.iso);
+            const matchingTask = dayWithTask.find(task => task?.iso === day?.iso);
+            return {
+                ...day,
+                ...(matchingHoliday && { holiday: matchingHoliday }),
+                ...(matchingTask && { tasksListFortheDay: matchingTask.tasksListFortheDay }),
+            };
+        }); 
 
-        if(dayWithTask.length) {
-            return calendarResult.map(day => {
-                const dayWithTaskArr = dayWithTask.find(dayWithTask => day.iso === dayWithTask?.iso) 
-                return dayWithTaskArr ? { ...day, tasksListFortheDay: dayWithTaskArr.tasksListFortheDay } : day 
-                }
-            );
-        }   
-
-        return calendarResult
 
     }, [selectedMonth.year, selectedMonth.monthIndex, selectedYear, holidaysState.data, enableHolidaysShow, dayWithTask])
 
@@ -190,6 +184,26 @@ export const useCalendar = ({
         }
     }, [dateGetRange])
 
+    const getRangeDaysWithTasks = React.useCallback(() => {
+        if (dayWithTask && dayWithTask.length ) {
+        
+            const daysWithTasks : CreateDateReturnType[] = []
+            dateGetRange.map(day =>{
+                const matchingTasks = dayWithTask.find(task => `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}` === task.iso)
+                
+                if(matchingTasks) {
+                    daysWithTasks.push(matchingTasks)
+                }
+
+                return daysWithTasks
+
+            })
+            
+            setDateRangeWithTasks(daysWithTasks)
+        }
+        
+    }, [dateGetRange])
+
     React.useEffect(() => {
         let dateArray = [];
         if (selectedDateRange.dateStartRange && selectedDateRange.endDate) {
@@ -242,6 +256,7 @@ export const useCalendar = ({
             selectedDateRange,
             dateRangeReverted,
             dateRangeWithHolidays,
+            dateRangeWithTasks,
             isLoading : holidaysState.isLoading
         },
         functions: {
@@ -255,6 +270,7 @@ export const useCalendar = ({
             setEnableHolidaysShow,
             setDateRangeWithHolidays,
             getRangeDaysWithHoliday,
+            getRangeDaysWithTasks,
             fetchFunction,
         }
     }

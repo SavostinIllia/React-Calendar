@@ -47,14 +47,16 @@ export const Calendar: React.FC<CalendarProps> = ({
     const handleDragEnter = (day: CreateDateReturnType) => {
         functions.setSelectedDate(day);
         functions.setSelectedDayRange(prev => ({ ...prev, endDate: day }));
+        functions.getRangeDaysWithHoliday();
+        functions.getRangeDaysWithTasks();
     };
 
-    const handleDragEnd = () => functions.getRangeDaysWithHoliday();
 
     const handleShowHolidays = () => {
         functions.setEnableHolidaysShow(true);
         functions.fetchFunction.getHolidays();
     };
+
 
     const renderCalendarDays = () => {
         return state.calendarDaysRender.map(day => {
@@ -72,7 +74,6 @@ export const Calendar: React.FC<CalendarProps> = ({
                     key={`${day.dayNumber}-${day.monthIndex}`}
                     onDragStart={() => handleDragStart(day)}
                     onDragEnter={() => handleDragEnter(day)}
-                    onDragEnd={handleDragEnd}
                     onClick={() => handleDayClick(day)}
                 >
                     <CalendarDay
@@ -97,7 +98,9 @@ export const Calendar: React.FC<CalendarProps> = ({
                 selectedDate={state.selectedDate}
                 holidayInformation={state.selectedDate?.holiday}
                 dateRangeWithHolidays={state.dateRangeWithHolidays}
-                selectedDateRange={state.selectedDateRange}               
+                dateRangeWithTasks={state.dateRangeWithTasks}
+                selectedDateRange={state.selectedDateRange}        
+                test={state.dateGetRange}       
             />
             <div className="w-3/5 m-[40px] mb-3 self-stretch relative">
                 <div
