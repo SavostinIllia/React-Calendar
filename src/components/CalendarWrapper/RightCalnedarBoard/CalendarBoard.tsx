@@ -18,8 +18,7 @@ interface RightBoardCalendarProps {
 
 export const RightBoard = ({ selectedDate, holidayInformation,  dateRangeWithHolidays, selectedDateRange}:RightBoardCalendarProps) => {
 
-    const {dayWithTask} = useCalendarDayTasksContext()
-    const [boardMinify, setBoardMinify] = useState(false);
+    const {dayWithTask} = useCalendarDayTasksContext();
 
 
     const holidaysInDateRange = React.useMemo(() => {
