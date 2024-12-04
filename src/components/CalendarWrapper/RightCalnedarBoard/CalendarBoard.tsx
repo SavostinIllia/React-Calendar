@@ -1,5 +1,5 @@
 
-import React , {useState}from "react";
+import React from "react";
 import { CreateDateReturnType, Holiday } from "../../../types"
 import { CalendarDayTaskSetter } from "./CalendarDayTaskSetter";
 import { useCalendarDayTasksContext } from "../../../context";
