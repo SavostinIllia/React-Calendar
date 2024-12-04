@@ -48,7 +48,6 @@ export const Calendar: React.FC<CalendarProps> = ({
         functions.setSelectedDate(day);
         functions.setSelectedDayRange(prev => ({ ...prev, endDate: day }));
         functions.getRangeDaysWithHoliday();
-        functions.getRangeDaysWithTasks();
     };
 
 
