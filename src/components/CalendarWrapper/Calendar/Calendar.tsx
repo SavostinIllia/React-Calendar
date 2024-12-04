@@ -34,7 +34,7 @@ export const Calendar: React.FC<CalendarProps> = ({
             functions.setSelectedMonthHandler(day.monthIndex);
         }
         functions.setSelectedDate(day);
-        functions.setDateRangeWithHolidays([]);
+        functions.setDateRangeWithHolidays([]); 
         functions.setSelectedDate(day);
         functions.setSelectedDayRange({ dateStartRange: null, endDate: null });
         setCurrentDayFromCalendar(day)
