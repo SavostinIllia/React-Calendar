@@ -14,7 +14,7 @@ interface RightBoardCalendarProps {
         dateStartRange: ReturnType<typeof createDate> | null;
         endDate: ReturnType<typeof createDate> | null;
     };
-    test: Date[]; // Типізовано тестовий масив
+    test: Date[];
 }
 
 export const RightBoard = ({
@@ -26,7 +26,7 @@ export const RightBoard = ({
 }: RightBoardCalendarProps) => {
     const { dayWithTask } = useCalendarDayTasksContext();
 
-    // Вираховуємо завдання у діапазоні дат
+
     const tasksInDateRange = React.useMemo(() => {
         if (
             !dayWithTask ||
@@ -52,7 +52,6 @@ export const RightBoard = ({
         }, []);
     }, [test, selectedDateRange, dayWithTask]);
 
-    // Рендеринг свят у діапазоні
     const holidaysInDateRange = React.useMemo(() => {
         if (!dateRangeWithHolidays?.length) return null;
 
@@ -73,7 +72,7 @@ export const RightBoard = ({
         );
     }, [dateRangeWithHolidays]);
 
-    // Рендеринг завдань на обраний день
+
     const renderDayTasks = React.useMemo(() => {
         const todayTasks = dayWithTask.find((day) => day.iso === selectedDate.iso);
         if (!todayTasks?.tasksListFortheDay?.length) return null;
@@ -94,7 +93,6 @@ export const RightBoard = ({
         );
     }, [dayWithTask, selectedDate, holidayInformation]);
 
-    // Рендеринг завдань у діапазоні
     const renderTasksInDateRange = React.useMemo(() => {
         if (!tasksInDateRange.length) return null;
 

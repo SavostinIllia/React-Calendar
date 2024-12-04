@@ -98,7 +98,6 @@ export const Calendar: React.FC<CalendarProps> = ({
                 selectedDate={state.selectedDate}
                 holidayInformation={state.selectedDate?.holiday}
                 dateRangeWithHolidays={state.dateRangeWithHolidays}
-                dateRangeWithTasks={state.dateRangeWithTasks}
                 selectedDateRange={state.selectedDateRange}        
                 test={state.dateGetRange}       
             />
