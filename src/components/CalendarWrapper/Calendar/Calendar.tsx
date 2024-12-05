@@ -98,7 +98,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                 holidayInformation={state.selectedDate?.holiday}
                 dateRangeWithHolidays={state.dateRangeWithHolidays}
                 selectedDateRange={state.selectedDateRange}        
-                test={state.dateGetRange}       
+                dateGetRange={state.dateGetRange}       
             />
             <div className="w-3/5 m-[40px] mb-3 self-stretch relative">
                 <div

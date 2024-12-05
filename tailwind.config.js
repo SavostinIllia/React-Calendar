@@ -29,7 +29,7 @@ export default {
       padding: {
         "10px": "10px",
         "20px": "20px",
-        30: "30px",
+        "30px": "30px",
         "40px": "40px",
       },
       gap: {

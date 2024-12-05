@@ -14,7 +14,7 @@ interface RightBoardCalendarProps {
         dateStartRange: ReturnType<typeof createDate> | null;
         endDate: ReturnType<typeof createDate> | null;
     };
-    test: Date[];
+    dateGetRange: Date[];
 }
 
 export const RightBoard = ({
@@ -22,23 +22,23 @@ export const RightBoard = ({
     holidayInformation,
     dateRangeWithHolidays,
     selectedDateRange,
-    test,
+    dateGetRange,
 }: RightBoardCalendarProps) => {
     const { dayWithTask } = useCalendarDayTasksContext();
 
-
     const tasksInDateRange = React.useMemo(() => {
+
         if (
             !dayWithTask ||
             dayWithTask.length === 0 ||
             !selectedDateRange.dateStartRange ||
             !selectedDateRange.endDate ||
-            test.length === 0
+            dateGetRange.length === 0
         ) {
             return [];
         }
 
-        return test.reduce<CreateDateReturnType[]>((acc, day) => {
+        return dateGetRange.reduce<CreateDateReturnType[]>((acc, day) => {
             const matchingTask = dayWithTask.find(
                 (task) =>
                     `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(
@@ -50,15 +50,15 @@ export const RightBoard = ({
             }
             return acc;
         }, []);
-    }, [test, selectedDateRange, dayWithTask]);
+    }, [dateGetRange, selectedDateRange, dayWithTask]);
 
     const holidaysInDateRange = React.useMemo(() => {
         if (!dateRangeWithHolidays?.length) return null;
-
+        
         return (
-            <>
+            <div className="mb-[20px]">
                 <h3 className="holliday__text text-violet text-4xl mb-4">Holiday this day's</h3>
-                <ul>
+                <ul className="list__wrapper relative h-auto overflow-y-auto pr-2 py-2">
                     {dateRangeWithHolidays.map((holiday) => (
                         <li
                             key={holiday.date.iso}
@@ -68,64 +68,76 @@ export const RightBoard = ({
                         </li>
                     ))}
                 </ul>
-            </>
+            </div>
         );
+
+        
     }, [dateRangeWithHolidays]);
 
 
     const renderDayTasks = React.useMemo(() => {
         const todayTasks = dayWithTask.find((day) => day.iso === selectedDate.iso);
+
         if (!todayTasks?.tasksListFortheDay?.length) return null;
 
         return (
-            <div
-                className={`task__wrapper relative h-full ${
-                    holidayInformation ? "max-h-[330px]" : "max-h-[440px]"
-                } overflow-y-auto pr-2`}
-            >
-                <h3 className="taskslist__text text-turquoise text-4xl mb-2 pb-3">
-                    Tasks for Today
-                </h3>
-                {todayTasks.tasksListFortheDay.map((task) => (
-                    <TaskItem key={task.id} task={task} day={todayTasks} />
-                ))}
+            <div className='task__wrapper relative h-auto'>
+                <h3 className="taskslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between"> Event's for Today - {todayTasks.tasksListFortheDay.length}</h3>
+                <ul className={`${holidaysInDateRange ? 'max-h-[600px]' : 'max-h-[390px]'} list__wrapper overflow-y-auto pr-2 mb-3 `}>
+                    {todayTasks.tasksListFortheDay.map((task) => (
+                    <li key={task.id} className="task__item flex basis-full text-txt-color w-full justify-start gap-[10px] mb-5 py-[5px] px-[10px] bg-black/[0.1] rounded-lg z-10 last:mb-0">
+                        <TaskItem  task={task} day={todayTasks} />
+                    </li>
+                    ))}
+                </ul>
             </div>
         );
     }, [dayWithTask, selectedDate, holidayInformation]);
 
     const renderTasksInDateRange = React.useMemo(() => {
-        if (!tasksInDateRange.length) return null;
+        if (!tasksInDateRange.length) return;
+       
+        const eventsCount : number = tasksInDateRange.reduce((acc, day)  => {
+            return acc += (day.tasksListFortheDay ? day.tasksListFortheDay.length : 0);
+        }, 0)
 
         return (
-            <div>
+            <div className='task__wrapper h-auto overflow-y-auto'>
+                <h3 className="taskslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between">Event's in range - {eventsCount}</h3>
+                <div className="h-auto max-h-[500px]">
                 {tasksInDateRange.map((day) => (
-                    <div key={day.iso}>
-                        <p>{day.iso}</p>
-                        <div>
-                            {day.tasksListFortheDay?.map((task) => (
-                                <TaskItem key={task.id} task={task} day={day} />
-                            ))}
-                        </div>
-                    </div>
+                    <ul className="h-full max-h-[600px] pr-2 mb-4" key={day.iso}>
+                    <>
+                        <p className="text-txt-color text-2xl mb-2">{day.iso}</p>
+                        {day.tasksListFortheDay?.map((task) => (
+                            <li className="task__item ml-2 flex basis-full text-txt-color w-full justify-start gap-[10px] mb-5 py-[5px] px-[10px] bg-black/[0.1] rounded-lg z-10 last:mb-0"
+                                key={task.id}>
+                                <TaskItem  task={task} day={day} />
+                            </li>
+                        ))}
+                    </>
+                    </ul>
                 ))}
+                </div>
+                
             </div>
         );
     }, [tasksInDateRange]);
 
     return (
-        <div className="w-2/5 self-stretch p-20px relative overflow-hidden">
+        <div className="w-2/5 self-stretch mx-[20px] mt-[20px] mb-3 relative">
             <div className="text-center text-txt-color mb-4">
                 {selectedDateRange.dateStartRange && selectedDateRange.endDate ? (
                     <div className="flex justify-center items-center gap-4">
-                        <h1 className="text-[60px] leading-none">
+                        <h1 className="text-[55px] leading-none">
                             {selectedDateRange.dateStartRange.dayNumber}{" "}
                             {selectedDateRange.dateStartRange.dayShort}
                             <p className="text-base leading-none">
                                 {selectedDateRange.dateStartRange.monthShort}
                             </p>
                         </h1>
-                        <span className="text-[60px]">-</span>
-                        <h1 className="text-[60px] leading-none">
+                        <span className="text-[55px]">-</span>
+                        <h1 className="text-[55px] leading-none">
                             {selectedDateRange.endDate.dayNumber}{" "}
                             {selectedDateRange.endDate.dayShort}
                             <p className="text-xl leading-none">
