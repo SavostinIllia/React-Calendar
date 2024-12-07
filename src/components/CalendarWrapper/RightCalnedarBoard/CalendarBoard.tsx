@@ -26,6 +26,12 @@ export const RightBoard = ({
 }: RightBoardCalendarProps) => {
     const { dayWithTask } = useCalendarDayTasksContext();
 
+    const holidaysContainerRef = React.useRef<HTMLDivElement | null>(null);
+    const calendarBoardContainerRef = React.useRef<HTMLDivElement | null>(null);
+
+
+    const [availableHeight, setAvailableHeight] = React.useState<number | null>(null);
+
     const tasksInDateRange = React.useMemo(() => {
 
         if (
@@ -56,12 +62,12 @@ export const RightBoard = ({
         if (!dateRangeWithHolidays?.length) return null;
         
         return (
-            <div className="mb-[20px]">
+            <div className="mb-[20px]" ref={holidaysContainerRef}>
                 <h3 className="holliday__text text-violet text-4xl mb-4">Holiday this day's</h3>
                 <ul className="list__wrapper relative h-auto overflow-y-auto pr-2 py-2">
                     {dateRangeWithHolidays.map((holiday) => (
                         <li
-                            key={holiday.date.iso}
+                            key={holiday.date.iso}  
                             className="bg-black/[0.1] rounded-lg py-[5px] px-[10px] mb-4 text-xl text-txt-color"
                         >
                             {holiday.date.iso.split("T")[0]}: {holiday.name}
@@ -83,7 +89,7 @@ export const RightBoard = ({
         return (
             <div className='task__wrapper relative h-auto'>
                 <h3 className="taskslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between"> Event's for Today - {todayTasks.tasksListFortheDay.length}</h3>
-                <ul className={`${holidaysInDateRange ? 'max-h-[600px]' : 'max-h-[390px]'} list__wrapper overflow-y-auto pr-2 mb-3 `}>
+                <ul className="list__wrapper overflow-y-auto pr-2 mb-3" style={{maxHeight: `${availableHeight}px`}}>
                     {todayTasks.tasksListFortheDay.map((task) => (
                     <li key={task.id} className="task__item flex basis-full text-txt-color w-full justify-start gap-[10px] mb-5 py-[5px] px-[10px] bg-black/[0.1] rounded-lg z-10 last:mb-0">
                         <TaskItem  task={task} day={todayTasks} />
@@ -92,7 +98,7 @@ export const RightBoard = ({
                 </ul>
             </div>
         );
-    }, [dayWithTask, selectedDate, holidayInformation]);
+    }, [dayWithTask, selectedDate, holidayInformation, availableHeight]);
 
     const renderTasksInDateRange = React.useMemo(() => {
         if (!tasksInDateRange.length) return;
@@ -100,13 +106,13 @@ export const RightBoard = ({
         const eventsCount : number = tasksInDateRange.reduce((acc, day)  => {
             return acc += (day.tasksListFortheDay ? day.tasksListFortheDay.length : 0);
         }, 0)
-
+        console.log('availableHeight', availableHeight)
         return (
-            <div className='task__wrapper h-auto overflow-y-auto'>
+            <div className='task__wrapper h-auto '>
                 <h3 className="taskslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between">Event's in range - {eventsCount}</h3>
-                <div className="h-auto max-h-[500px]">
+                <div  className="overflow-y-auto test" style={{maxHeight: `${availableHeight}px`}}>
                 {tasksInDateRange.map((day) => (
-                    <ul className="h-full max-h-[600px] pr-2 mb-4" key={day.iso}>
+                    <ul className='h-full pr-2 mb-4'  key={day.iso}>
                     <>
                         <p className="text-txt-color text-2xl mb-2">{day.iso}</p>
                         {day.tasksListFortheDay?.map((task) => (
@@ -117,16 +123,45 @@ export const RightBoard = ({
                         ))}
                     </>
                     </ul>
-                ))}
-                </div>
-                
+                ))}   
+                </div>        
             </div>
         );
     }, [tasksInDateRange]);
 
+    React.useLayoutEffect(() => {
+        const calculateHeight = () => {
+         
+            const containerHeight = calendarBoardContainerRef.current && calendarBoardContainerRef.current.offsetHeight - 32 ;  
+            const selectedDateHeight = (calendarBoardContainerRef.current?.querySelector('.date__title') as HTMLElement)?.offsetHeight  + 20;
+            const eventFormHeight = (calendarBoardContainerRef.current?.querySelector('form') as HTMLElement)?.offsetHeight || 0;
+            const holidaysHeight = holidaysContainerRef.current && holidaysContainerRef.current.offsetHeight + 20 || 0;
+            let remainingHeight = 0;
+
+            if(eventFormHeight > 0) {
+                remainingHeight = containerHeight ? containerHeight - selectedDateHeight - eventFormHeight - holidaysHeight - 40 : 0
+                
+            }else{
+
+                remainingHeight = containerHeight ? containerHeight - selectedDateHeight - eventFormHeight - holidaysHeight - 20  : 0
+            }
+
+            setAvailableHeight((prev) => (prev !== remainingHeight ? remainingHeight : prev));
+        
+        };
+    
+        calculateHeight(); 
+    
+        window.addEventListener("resize", calculateHeight);
+    
+        return () => {
+            window.removeEventListener("resize", calculateHeight);
+        };
+    }, [holidaysContainerRef, selectedDateRange, selectedDate]);
+    
     return (
-        <div className="w-2/5 self-stretch mx-[20px] mt-[20px] mb-3 relative">
-            <div className="text-center text-txt-color mb-4">
+        <div className="w-2/5 self-stretch mx-[20px] mt-[20px] mb-3 relative" ref={calendarBoardContainerRef}>
+            <div className="text-center text-txt-color mb-4 date__title" >
                 {selectedDateRange.dateStartRange && selectedDateRange.endDate ? (
                     <div className="flex justify-center items-center gap-4">
                         <h1 className="text-[55px] leading-none">
@@ -152,10 +187,10 @@ export const RightBoard = ({
                     </>
                 )}
             </div>
-
+            
             {holidaysInDateRange ||
                 (holidayInformation?.name && (
-                    <div className="text-txt-color mb-5">
+                    <div className="text-txt-color mb-5" ref={holidaysContainerRef}>
                         <h3 className="holliday__text text-violet text-4xl mb-4">Holiday this day</h3>
                         <p className="bg-black/[0.1] rounded-lg py-[5px] px-[10px] text-xl">
                             {holidayInformation.name}
