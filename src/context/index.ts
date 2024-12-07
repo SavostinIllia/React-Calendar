@@ -1,3 +1,3 @@
-export * from "./CalendarDayTasksContext";
+export * from "./CalendarDayEventsContext";
 export * from "./ThemeContext";
 

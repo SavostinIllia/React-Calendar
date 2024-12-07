@@ -13,7 +13,10 @@ export default {
         "additional-txt-color": "var(--additional-txt-color)",
         "flat-orange": "var(--flat-orange)",
         "board-bg": "var(--board-bg)",
+        mint: "var(--mint)",
         violet: "var(--violet)",
+        "selected-range": "var(--selected-range)",
+        "accent-text-color": "var(--accent-text-color)",
       },
       backgroundImage: {
         arrsvg: "url('./static/images/arrow_white.svg')",
@@ -46,5 +49,19 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        ".center-x": {
+          left: "50%",
+          transform: "translateX(-50%)",
+        },
+        ".center-xy": {
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+        },
+      });
+    },
+  ],
 };

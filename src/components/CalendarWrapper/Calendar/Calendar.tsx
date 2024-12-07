@@ -4,8 +4,8 @@ import { CalendarDay, RightBoard } from "../../index";
 import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../../utils/helpers/date";
 import { useTheme } from "../../../context/ThemeContext";
 import { CreateDateReturnType} from "../../../types/index";
-import { useCalendarDayTasksContext } from "../../../context/CalendarDayTasksContext";
 import SvgIcon from "../../SvgIcon/SvgIcon";
+import { useCalendarDayEventsContext } from "../../../context/index";
 
 
 interface CalendarProps { 
@@ -22,8 +22,7 @@ export const Calendar: React.FC<CalendarProps> = ({
 }) => {
     const { state, functions } = useCalendar({ firstWeekDay, locale, selectedDate });
     const { theme } = useTheme();
-
-    const {setCurrentDayFromCalendar} = useCalendarDayTasksContext()
+    const {setCurrentDayFromCalendar} = useCalendarDayEventsContext()
 
     const handlePrevStep = () => functions.calendarStepChangeHandler('prev');
     const handleNextStep = () => functions.calendarStepChangeHandler('next');
@@ -84,12 +83,13 @@ export const Calendar: React.FC<CalendarProps> = ({
                         startRangeDate={startRangeDate}
                         endRangeDate={endRangeDate}
                         holiday={day.holiday}
-                        tasksListFortheDay={day.tasksListFortheDay}
+                        eventsListForTheDay={day.eventsListForTheDay}
                     />
                 </div>
             );
         });
     };
+
 
     return (
         <>  
@@ -102,7 +102,7 @@ export const Calendar: React.FC<CalendarProps> = ({
             />
             <div className="w-3/5 m-[40px] mb-3 self-stretch relative">
                 <div
-                    className={`pb-40px uppercase font-semibold text-center text-3xl flex justify-between w-34 ${theme === 'light' ? 'text-additional-txt-color' : 'text-txt-color'}`}
+                    className={`pb-40px uppercase font-semibold text-center text-3xl flex justify-between w-34`}
                 >
                     <div
                         aria-hidden
@@ -110,15 +110,15 @@ export const Calendar: React.FC<CalendarProps> = ({
                         onClick={handlePrevStep}
                     />
                     {state.mode === 'days' && (
-                        <div onClick={() => handleSetMode('monthes')}>
+                        <div className="text-accent-text-color" onClick={() => handleSetMode('monthes')}>
                             {state.monthesNames[state.selectedMonth.monthIndex].month} {state.selectedYear}
                         </div>
                     )}
                     {state.mode === 'monthes' && (
-                        <div onClick={() => handleSetMode('years')}>{state.selectedYear}</div>
+                        <div className="text-accent-text-color" onClick={() => handleSetMode('years')}>{state.selectedYear}</div>
                     )}
                     {state.mode === 'years' && (
-                        <div onClick={() => handleSetMode('days')}>
+                        <div className="text-accent-text-color" onClick={() => handleSetMode('days')}>
                             {state.selectedYearRange[0]} - {state.selectedYearRange[state.selectedYearRange.length - 1]}
                         </div>
                     )}
@@ -131,9 +131,9 @@ export const Calendar: React.FC<CalendarProps> = ({
                 <div className="flex flex-wrap">
                     {state.mode === 'days' && (
                         <>
-                            <div className={`w-full grid grid-cols-7 pb-40px text-center gap-15px uppercase text-txt-color font-semibold ${theme === 'light' ? 'text-additional-txt-color' : 'text-txt-color'}`}>
+                            <div className={`w-full grid grid-cols-7 mb-[30px] py-[10px] rounded-md text-accent-text-color bg-black/20 text-center gap-15px uppercase font-semibold `}>
                                 {state.weekDaysNames.map(weekDaysName => (
-                                    <div key={weekDaysName.dayShort}>{weekDaysName.dayShort}</div>
+                                    <span key={weekDaysName.dayShort}>{weekDaysName.dayShort}</span>
                                 ))}
                             </div>
                             <div className="calendar w-full grid  grid-cols-7 text-center gap-15px">

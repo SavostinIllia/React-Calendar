@@ -1,14 +1,14 @@
-import { useCalendarDayTasksContext } from '../../../context/CalendarDayTasksContext'
+import { useCalendarDayEventsContext } from '../../../context/index'
 import SvgIcon from '../../SvgIcon/SvgIcon'
 
 
-export const CalendarDayTaskSetter = () =>  {
+export const CalendarDayEventSetter = () =>  {
 
-    const {setTaskForSelectedDay} = useCalendarDayTasksContext()
+    const {setEventForSelectedDay} = useCalendarDayEventsContext()
 
     const onSubmitFormHandler = (e: any) => {
       e.preventDefault()
-      setTaskForSelectedDay(e.target[0].value)
+      setEventForSelectedDay(e.target[0].value)
       e.target[0].value = ''
     }
 

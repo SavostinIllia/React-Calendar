@@ -2,7 +2,7 @@ import React from "react";
 import { createMonth, createDate, getMonthesNames, getWeekDaysNames, getMonthNumberOfDays } from "../helpers/date/index";
 import { useHolidayFetchHandler } from "./useHoliday";
 import { CreateDateReturnType, Holiday } from "../../types/index";
-import { useCalendarDayTasksContext } from "../../context/CalendarDayTasksContext";
+import { useCalendarDayEventsContext } from "../../context";
 
 
 interface useCalendarParams {
@@ -22,7 +22,7 @@ export const useCalendar = ({
     selectedDate: date,
     firstWeekDay = 2
 }: useCalendarParams) => {
-    const {dayWithTask} = useCalendarDayTasksContext()
+    const {dayWithEvent} = useCalendarDayEventsContext()
 
     const [mode, setMode] = React.useState<'days' | 'monthes' | 'years'>('days')
 
@@ -101,16 +101,16 @@ export const useCalendar = ({
 
         return calendarResult.map(day => {
             const matchingHoliday = holidaysState.isSuccess && holidaysState.data?.response.holidays.find(holiday => holiday.date.iso.split('T')[0] === day?.iso);
-            const matchingTask = dayWithTask.find(task => task?.iso === day?.iso);
+            const matchingEvent = dayWithEvent.find(event => event?.iso === day?.iso);
             return {
                 ...day,
                 ...(matchingHoliday && { holiday: matchingHoliday }),
-                ...(matchingTask && { tasksListFortheDay: matchingTask.tasksListFortheDay }),
+                ...(matchingEvent && { eventsListForTheDay: matchingEvent.eventsListForTheDay }),
             };
         }); 
 
 
-    }, [selectedMonth.year, selectedMonth.monthIndex, selectedYear, holidaysState.data, enableHolidaysShow, dayWithTask])
+    }, [selectedMonth.year, selectedMonth.monthIndex, selectedYear, holidaysState.data, enableHolidaysShow, dayWithEvent])
 
     const calendarStepChangeHandler = (direction: 'prev' | 'next') => {
 

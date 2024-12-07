@@ -1,4 +1,4 @@
-import { Holiday, TaskListItem } from "./index";
+import { Holiday, EventListItem } from "./index";
 
 export interface CreateDateReturnType{
         date: Date;
@@ -16,5 +16,5 @@ export interface CreateDateReturnType{
         iso: string;
         week: number;
         holiday?: Holiday;
-        tasksListFortheDay?: TaskListItem[] ;
+        eventsListForTheDay?: EventListItem[] | undefined;
 }

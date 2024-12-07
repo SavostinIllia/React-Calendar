@@ -1,15 +1,15 @@
 import React from "react";
-import { CreateDateReturnType, Holiday } from "../../../types";
-import { CalendarDayTaskSetter } from "./CalendarDayTaskSetter";
-import { useCalendarDayTasksContext } from "../../../context";
-import { TaskItem } from "./TaskItem";
+import { CreateDateReturnType, Holiday, EventListItem } from "../../../types";
+import { CalendarDayEventSetter } from "./CalendarDayEventSetter";
+import { useCalendarDayEventsContext } from "../../../context";
+import { DayEventItem } from "./DayEventItem";
 import { createDate } from "../../../utils/helpers/date";
 
 interface RightBoardCalendarProps {
     selectedDate: CreateDateReturnType;
     holidayInformation?: Holiday;
     dateRangeWithHolidays?: Holiday[] | undefined;
-    dateRangeWithTasks?: CreateDateReturnType[] | undefined;
+    dateRangeWithEvents?: CreateDateReturnType[] | undefined;
     selectedDateRange: {
         dateStartRange: ReturnType<typeof createDate> | null;
         endDate: ReturnType<typeof createDate> | null;
@@ -24,19 +24,18 @@ export const RightBoard = ({
     selectedDateRange,
     dateGetRange,
 }: RightBoardCalendarProps) => {
-    const { dayWithTask } = useCalendarDayTasksContext();
+    const { dayWithEvent } = useCalendarDayEventsContext();
 
     const holidaysContainerRef = React.useRef<HTMLDivElement | null>(null);
     const calendarBoardContainerRef = React.useRef<HTMLDivElement | null>(null);
 
-
     const [availableHeight, setAvailableHeight] = React.useState<number | null>(null);
 
-    const tasksInDateRange = React.useMemo(() => {
+    const eventsInDateRange = React.useMemo(() => {
 
         if (
-            !dayWithTask ||
-            dayWithTask.length === 0 ||
+            !dayWithEvent ||
+            dayWithEvent.length === 0 ||
             !selectedDateRange.dateStartRange ||
             !selectedDateRange.endDate ||
             dateGetRange.length === 0
@@ -45,18 +44,18 @@ export const RightBoard = ({
         }
 
         return dateGetRange.reduce<CreateDateReturnType[]>((acc, day) => {
-            const matchingTask = dayWithTask.find(
-                (task) =>
+            const matchingEvent = dayWithEvent.find(
+                (event) =>
                     `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(
                         day.getDate()
-                    ).padStart(2, "0")}` === task.iso
+                    ).padStart(2, "0")}` === event.iso
             );
-            if (matchingTask) {
-                acc.push(matchingTask);
+            if (matchingEvent) {
+                acc.push(matchingEvent);
             }
             return acc;
         }, []);
-    }, [dateGetRange, selectedDateRange, dayWithTask]);
+    }, [dateGetRange, selectedDateRange, dayWithEvent]);
 
     const holidaysInDateRange = React.useMemo(() => {
         if (!dateRangeWithHolidays?.length) return null;
@@ -81,53 +80,53 @@ export const RightBoard = ({
     }, [dateRangeWithHolidays]);
 
 
-    const renderDayTasks = React.useMemo(() => {
-        const todayTasks = dayWithTask.find((day) => day.iso === selectedDate.iso);
+    const renderEventsList = (eventList: EventListItem[] | undefined) => {
+        return eventList && eventList.map((event) => (
+            <li key={event.id} className="event__item flex basis-full text-txt-color w-full justify-start gap-[10px] mb-5 py-[5px] px-[10px] bg-black/[0.1] rounded-lg z-10 last:mb-0">
+                <DayEventItem event={event} day={event} />
+            </li>
+        ));
+    }
 
-        if (!todayTasks?.tasksListFortheDay?.length) return null;
+
+    const renderDayEvents = React.useMemo(() => {
+        const todayEvents = dayWithEvent.find((day) => day.iso === selectedDate.iso);
+
+        if (!todayEvents?.eventsListForTheDay?.length) return null;
 
         return (
-            <div className='task__wrapper relative h-auto'>
-                <h3 className="taskslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between"> Event's for Today - {todayTasks.tasksListFortheDay.length}</h3>
+            <div className='event__wrapper relative h-auto'>
+                <h3 className="eventslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between"> Event's for Today - {todayEvents.eventsListForTheDay.length}</h3>
                 <ul className="list__wrapper overflow-y-auto pr-2 mb-3" style={{maxHeight: `${availableHeight}px`}}>
-                    {todayTasks.tasksListFortheDay.map((task) => (
-                    <li key={task.id} className="task__item flex basis-full text-txt-color w-full justify-start gap-[10px] mb-5 py-[5px] px-[10px] bg-black/[0.1] rounded-lg z-10 last:mb-0">
-                        <TaskItem  task={task} day={todayTasks} />
-                    </li>
-                    ))}
+                        {renderEventsList(todayEvents.eventsListForTheDay)}
                 </ul>
             </div>
         );
-    }, [dayWithTask, selectedDate, holidayInformation, availableHeight]);
+    }, [dayWithEvent, selectedDate, holidayInformation, availableHeight]);
 
-    const renderTasksInDateRange = React.useMemo(() => {
-        if (!tasksInDateRange.length) return;
+    const renderEventsInDateRange = React.useMemo(() => {
+        if (!eventsInDateRange.length) return;
        
-        const eventsCount : number = tasksInDateRange.reduce((acc, day)  => {
-            return acc += (day.tasksListFortheDay ? day.tasksListFortheDay.length : 0);
+        const eventsCount : number = eventsInDateRange.reduce((acc, day)  => {
+            return acc += (day.eventsListForTheDay ? day.eventsListForTheDay.length : 0);
         }, 0)
-        console.log('availableHeight', availableHeight)
+
         return (
-            <div className='task__wrapper h-auto '>
-                <h3 className="taskslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between">Event's in range - {eventsCount}</h3>
+            <div className='event__wrapper h-auto '>
+                <h3 className="eventslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between">Event's in range - {eventsCount}</h3>
                 <div  className="overflow-y-auto test" style={{maxHeight: `${availableHeight}px`}}>
-                {tasksInDateRange.map((day) => (
+                {eventsInDateRange.map((day) => (
                     <ul className='h-full pr-2 mb-4'  key={day.iso}>
                     <>
                         <p className="text-txt-color text-2xl mb-2">{day.iso}</p>
-                        {day.tasksListFortheDay?.map((task) => (
-                            <li className="task__item ml-2 flex basis-full text-txt-color w-full justify-start gap-[10px] mb-5 py-[5px] px-[10px] bg-black/[0.1] rounded-lg z-10 last:mb-0"
-                                key={task.id}>
-                                <TaskItem  task={task} day={day} />
-                            </li>
-                        ))}
+                        {renderEventsList(day?.eventsListForTheDay)}
                     </>
                     </ul>
                 ))}   
                 </div>        
             </div>
         );
-    }, [tasksInDateRange]);
+    }, [eventsInDateRange]);
 
     React.useLayoutEffect(() => {
         const calculateHeight = () => {
@@ -158,7 +157,8 @@ export const RightBoard = ({
             window.removeEventListener("resize", calculateHeight);
         };
     }, [holidaysContainerRef, selectedDateRange, selectedDate]);
-    
+
+
     return (
         <div className="w-2/5 self-stretch mx-[20px] mt-[20px] mb-3 relative" ref={calendarBoardContainerRef}>
             <div className="text-center text-txt-color mb-4 date__title" >
@@ -198,10 +198,10 @@ export const RightBoard = ({
                     </div>
                 ))}
 
-            {renderTasksInDateRange || renderDayTasks}
+            {renderEventsInDateRange || renderDayEvents}
 
             {!selectedDateRange.dateStartRange && !selectedDateRange.endDate && (
-                <CalendarDayTaskSetter />
+                <CalendarDayEventSetter />
             )}
         </div>
     );
