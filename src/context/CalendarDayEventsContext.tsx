@@ -13,7 +13,6 @@ const CalendarDayEventsContext = createContext<CalendarDayEventsContextParams | 
 
 interface CalendarDayEventsContextProps {
   children: ReactNode;
-  currentDate: Date;
 }
 
 export const CalendarDayEventsContextProvider: React.FC<CalendarDayEventsContextProps> = ({ children }) => {
@@ -52,9 +51,11 @@ export const CalendarDayEventsContextProvider: React.FC<CalendarDayEventsContext
   };
 
   const removeEventFromCurrentDay = (day: CreateDateReturnType, eventId: number) => {
+    
     setDayWithEvent((prevDayWithEvent) =>
       prevDayWithEvent
         .map((item) => {
+          debugger
           if (item.iso === day.iso) {
             const updatedEvents = item.eventsListForTheDay?.filter((event) => event.id !== eventId) || [];
             return updatedEvents.length > 0

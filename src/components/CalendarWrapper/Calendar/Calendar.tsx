@@ -2,10 +2,11 @@ import React from "react";
 import { useCalendar } from "../../../utils/hooks/useCalendar";
 import { CalendarDay, RightBoard } from "../../index";
 import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../../utils/helpers/date";
-import { useTheme } from "../../../context/ThemeContext";
+import { useThemeContext } from "../../../context/ThemeContext";
 import { CreateDateReturnType} from "../../../types/index";
 import SvgIcon from "../../SvgIcon/SvgIcon";
 import { useCalendarDayEventsContext } from "../../../context/index";
+import { TooltipProvider } from "../../../context/TooltipContext";
 
 
 interface CalendarProps { 
@@ -21,7 +22,7 @@ export const Calendar: React.FC<CalendarProps> = ({
     selectedDate,
 }) => {
     const { state, functions } = useCalendar({ firstWeekDay, locale, selectedDate });
-    const { theme } = useTheme();
+    const { theme } = useThemeContext();
     const {setCurrentDayFromCalendar} = useCalendarDayEventsContext()
 
     const handlePrevStep = () => functions.calendarStepChangeHandler('prev');
@@ -41,6 +42,7 @@ export const Calendar: React.FC<CalendarProps> = ({
 
     const handleDragStart = (day: CreateDateReturnType) => {
         functions.setSelectedDayRange(() => ({ dateStartRange: day, endDate: null }));
+        
     };
 
     const handleDragEnter = (day: CreateDateReturnType) => {
@@ -137,7 +139,9 @@ export const Calendar: React.FC<CalendarProps> = ({
                                 ))}
                             </div>
                             <div className="calendar w-full grid  grid-cols-7 text-center gap-15px">
-                                {renderCalendarDays()}
+                                <TooltipProvider>
+                                    {renderCalendarDays()}
+                                </TooltipProvider>
                             </div>
                         </>
                     )}

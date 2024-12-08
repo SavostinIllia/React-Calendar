@@ -2,7 +2,7 @@ import {  useCalendarDayEventsContext } from "../../../context/index"
 import SvgIcon from "../../SvgIcon/SvgIcon"
 
 export const DayEventItem = ({event, day} : any) => {
-
+    
     const {removeEventFromCurrentDay} = useCalendarDayEventsContext()
 
     return (

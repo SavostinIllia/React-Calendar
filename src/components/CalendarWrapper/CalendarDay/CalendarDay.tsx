@@ -1,3 +1,4 @@
+import { useToolipContext } from "../../../context/index";
 import { CalendarDayProps } from "../../../types"
 
 export const CalendarDay:React.FC<CalendarDayProps> = ({
@@ -12,6 +13,44 @@ export const CalendarDay:React.FC<CalendarDayProps> = ({
     eventsListForTheDay,
 
  }) => {
+
+  const {showTooltip, hideTooltip} = useToolipContext()
+
+  const onMouseEnterHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+  
+    const targetElement = e.currentTarget as HTMLElement;
+    const calendarElement = targetElement.closest('.calendar') as HTMLElement;
+    
+    const content = (
+      <>
+        {eventsListForTheDay && eventsListForTheDay?.length > 0 && (
+          <p>
+            In this day you planned{' '}
+            <strong className="text-board-bg">
+              {eventsListForTheDay.length} event{eventsListForTheDay.length > 1 ? '\'s' : ''}{' '}
+            </strong>
+            .
+          </p>
+        )}
+        {holiday && (
+          <p>
+            In this day celebrates <strong className=" text-turquoise">{holiday.name}</strong>.
+          </p>
+        )}
+      </>
+    );
+    
+
+
+    if (eventsListForTheDay?.length || holiday) {
+      showTooltip(content, targetElement, calendarElement);
+    }
+  };
+  
+  
+  const onMouseLeaveHandler = () => {
+    hideTooltip()
+  }
 
     const HolidayIndicator = holiday && (
         <span className="day__holiday absolute rounded-md w-[7px] h-[7px] center-x bottom-[12px] bg-turquoise shadow-xxs" />
@@ -33,7 +72,8 @@ export const CalendarDay:React.FC<CalendarDayProps> = ({
                 endRangeDate ? "end_range overflow-hidden !opacity-100" : '',
                 eventsListForTheDay ? 'day__with_event ' : '',
                 ].join(' ')}
-                // TODO TOOLTIP HOVER
+                onMouseEnter={onMouseEnterHandler}
+                onMouseLeave={onMouseLeaveHandler}
             >
             {HolidayIndicator}
             {EventIndicator}

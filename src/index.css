@@ -181,3 +181,16 @@ body::after {
 .date.is__selected {
   border-radius: 30px !important;
 }
+
+.tooltip.hide {
+  position: absolute;
+  opacity: 0; 
+  transition: opacity .3s ease-in-out;
+  visibility: hidden;
+}
+
+.tooltip.show {
+  opacity: 1;
+  transition: opacity .3s ease-in-out;
+  visibility: visible;
+}

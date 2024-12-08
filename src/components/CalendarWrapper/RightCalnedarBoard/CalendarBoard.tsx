@@ -80,10 +80,10 @@ export const RightBoard = ({
     }, [dateRangeWithHolidays]);
 
 
-    const renderEventsList = (eventList: EventListItem[] | undefined) => {
+    const renderEventsList = (eventList: EventListItem[] | undefined, day?: CreateDateReturnType, ) => {
         return eventList && eventList.map((event) => (
             <li key={event.id} className="event__item flex basis-full text-txt-color w-full justify-start gap-[10px] mb-5 py-[5px] px-[10px] bg-black/[0.1] rounded-lg z-10 last:mb-0">
-                <DayEventItem event={event} day={event} />
+                <DayEventItem event={event} day={day} />
             </li>
         ));
     }
@@ -98,7 +98,7 @@ export const RightBoard = ({
             <div className='event__wrapper relative h-auto'>
                 <h3 className="eventslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between"> Event's for Today - {todayEvents.eventsListForTheDay.length}</h3>
                 <ul className="list__wrapper overflow-y-auto pr-2 mb-3" style={{maxHeight: `${availableHeight}px`}}>
-                        {renderEventsList(todayEvents.eventsListForTheDay)}
+                        {renderEventsList(todayEvents.eventsListForTheDay, todayEvents)}
                 </ul>
             </div>
         );
@@ -116,10 +116,10 @@ export const RightBoard = ({
                 <h3 className="eventslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between">Event's in range - {eventsCount}</h3>
                 <div  className="overflow-y-auto test" style={{maxHeight: `${availableHeight}px`}}>
                 {eventsInDateRange.map((day) => (
-                    <ul className='h-full pr-2 mb-4'  key={day.iso}>
+                    <ul className='h-full pr-2 mb-4' key={day.iso}>
                     <>
                         <p className="text-txt-color text-2xl mb-2">{day.iso}</p>
-                        {renderEventsList(day?.eventsListForTheDay)}
+                        {renderEventsList(day?.eventsListForTheDay, day)}
                     </>
                     </ul>
                 ))}   
