@@ -1,5 +1,6 @@
 import { useToolipContext } from "../../../context/index";
 import { CalendarDayProps } from "../../../types"
+import SvgIcon from "../../SvgIcon/SvgIcon";
 
 export const CalendarDay:React.FC<CalendarDayProps> = ({
     day,
@@ -22,22 +23,24 @@ export const CalendarDay:React.FC<CalendarDayProps> = ({
     const calendarElement = targetElement.closest('.calendar') as HTMLElement;
     
     const content = (
-      <>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+      <SvgIcon name="info" />
+      <p className=" flex-1">
         {eventsListForTheDay && eventsListForTheDay?.length > 0 && (
-          <p>
+          <>
             In this day you planned{' '}
             <strong className="text-board-bg">
               {eventsListForTheDay.length} event{eventsListForTheDay.length > 1 ? '\'s' : ''}{' '}
-            </strong>
-            .
-          </p>
+            </strong>. <br />
+          </>
         )}
         {holiday && (
-          <p>
+          <>
             In this day celebrates <strong className=" text-turquoise">{holiday.name}</strong>.
-          </p>
-        )}
-      </>
+          </>
+        )}  
+        </p>
+      </div>
     );
     
 

@@ -1,10 +1,10 @@
 import React from "react";
 
 interface SvgIconProps {
-  name: "add" | "arrow" | "trash" | "spinner"; // Define the accepted icon names
-  size?: number; // Size in pixels
-  color?: string; // Icon fill color
-  className?: string; // Additional CSS classes
+  name: "add" | "arrow" | "trash" | "spinner" | "info"; 
+  size?: number; 
+  color?: string;
+  className?: string;
 }
 
 const SvgIcon: React.FC<SvgIconProps> = ({
@@ -13,7 +13,7 @@ const SvgIcon: React.FC<SvgIconProps> = ({
   color = "currentColor",
   className = "",
 }) => {
-  // Define the icons and their respective viewBox dimensions
+
   const icons: Record<
     SvgIconProps["name"],
     { viewBox: string; path: JSX.Element }
@@ -34,6 +34,12 @@ const SvgIcon: React.FC<SvgIconProps> = ({
       viewBox: "0 0 512 512",
       path: (
         <path d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"/>     )
+    },
+    info: {
+      viewBox: "0 0 512 512",
+      path: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="512" height="512"><path d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,22A10,10,0,1,1,22,12,10.011,10.011,0,0,1,12,22Z"/><path d="M12,10H11a1,1,0,0,0,0,2h1v6a1,1,0,0,0,2,0V12A2,2,0,0,0,12,10Z"/><circle cx="12" cy="6.5" r="1.5"/></svg>
+      )
     },
     spinner: {
       viewBox: "0 0 512 512",
