@@ -1,6 +1,6 @@
-import { useToolipContext } from "../../../context/index";
-import { CalendarDayProps } from "../../../types"
-import SvgIcon from "../../SvgIcon/SvgIcon";
+import { useToolipContext } from "../../../../context/index";
+import { CalendarDayProps } from "../../../../types"
+import SvgIcon from "../../../SvgIcon/SvgIcon";
 
 export const CalendarDay:React.FC<CalendarDayProps> = ({
     day,

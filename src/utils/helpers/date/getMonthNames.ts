@@ -1,15 +1,9 @@
+import { MontheNamesArray } from "../../../types";
 import { createDate } from "./createDate"
 
 
-interface montheNamesArray { 
-    month: ReturnType<typeof createDate>['month'];
-    monthShort: ReturnType<typeof createDate>['monthShort'];
-    monthIndex: ReturnType<typeof createDate>['monthIndex'];
-    date: ReturnType<typeof createDate>['date'];
-}
-
 export const getMonthesNames = (locale: string = 'default') => {
-    const monthesNames:montheNamesArray[] = Array.from({length: 12})
+    const monthesNames:MontheNamesArray[] = Array.from({length: 12})
 
     const d = new Date();
 

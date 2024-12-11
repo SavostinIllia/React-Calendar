@@ -55,7 +55,6 @@ export const CalendarDayEventsContextProvider: React.FC<CalendarDayEventsContext
     setDayWithEvent((prevDayWithEvent) =>
       prevDayWithEvent
         .map((item) => {
-          debugger
           if (item.iso === day.iso) {
             const updatedEvents = item.eventsListForTheDay?.filter((event) => event.id !== eventId) || [];
             return updatedEvents.length > 0

@@ -2,11 +2,10 @@ import React from "react";
 import { useCalendar } from "../../../utils/hooks/useCalendar";
 import { CalendarDay, RightBoard } from "../../index";
 import { checkCurrentDate, checkDateEqual, isDateInRange } from "../../../utils/helpers/date";
-import { useThemeContext } from "../../../context/ThemeContext";
 import { CreateDateReturnType} from "../../../types/index";
 import SvgIcon from "../../SvgIcon/SvgIcon";
 import { useCalendarDayEventsContext } from "../../../context/index";
-import { TooltipProvider } from "../../../context/TooltipContext";
+import { CalendarMode } from "./CalendarMode/CalendarMode";
 
 
 interface CalendarProps { 
@@ -22,12 +21,12 @@ export const Calendar: React.FC<CalendarProps> = ({
     selectedDate,
 }) => {
     const { state, functions } = useCalendar({ firstWeekDay, locale, selectedDate });
-    const { theme } = useThemeContext();
+
     const {setCurrentDayFromCalendar} = useCalendarDayEventsContext()
 
     const handlePrevStep = () => functions.calendarStepChangeHandler('prev');
     const handleNextStep = () => functions.calendarStepChangeHandler('next');
-    const handleSetMode = (mode: 'days' | 'monthes' | 'years') => functions.setMode(mode);
+
     
     const handleDayClick = (day: CreateDateReturnType) => {
         if (day.monthNumber !== state.selectedMonth.monthNumber) {
@@ -102,98 +101,19 @@ export const Calendar: React.FC<CalendarProps> = ({
                 selectedDateRange={state.selectedDateRange}        
                 dateGetRange={state.dateGetRange}       
             />
-            <div className="w-3/5 m-[40px] mb-3 self-stretch relative">
-                <div
-                    className={`pb-40px uppercase font-semibold text-center text-3xl flex justify-between w-34`}
-                >
-                    <div
-                        aria-hidden
-                        className={`arr w-[17px] bg-arrsvg transition hover:cursor-pointer ${theme}`}
-                        onClick={handlePrevStep}
+            <div className="w-3/5 p-[40px] pb-3 self-stretch relative">
+                <CalendarMode mode={state.mode} 
+                    weekDaysNames={state.weekDaysNames} 
+                    monthesNames={state.monthesNames}
+                    renderCalendarDaysFunc={renderCalendarDays}
+                    selectedYear={state.selectedYear}
+                    selectedMonth={state.selectedMonth}
+                    setModeHandler={functions.setMode}
+                    setMonthHandler={functions.setSelectedMonthHandler}
+                    selectedYearRange={state.selectedYearRange}setSelectedYearHandler={functions.setSelectedYear}
+                    handleNextStep={handleNextStep}
+                    handlePrevStep={handlePrevStep}
                     />
-                    {state.mode === 'days' && (
-                        <div className="text-accent-text-color" onClick={() => handleSetMode('monthes')}>
-                            {state.monthesNames[state.selectedMonth.monthIndex].month} {state.selectedYear}
-                        </div>
-                    )}
-                    {state.mode === 'monthes' && (
-                        <div className="text-accent-text-color" onClick={() => handleSetMode('years')}>{state.selectedYear}</div>
-                    )}
-                    {state.mode === 'years' && (
-                        <div className="text-accent-text-color" onClick={() => handleSetMode('days')}>
-                            {state.selectedYearRange[0]} - {state.selectedYearRange[state.selectedYearRange.length - 1]}
-                        </div>
-                    )}
-                    <div
-                        aria-hidden
-                        className={`arr w-[17px] rotate-180 bg-arrsvg transition hover:cursor-pointer ${theme}`}
-                        onClick={handleNextStep}
-                    />
-                </div>
-                <div className="flex flex-wrap">
-                    {state.mode === 'days' && (
-                        <>
-                            <div className={`w-full grid grid-cols-7 mb-[30px] py-[10px] rounded-md text-accent-text-color bg-black/20 text-center gap-15px uppercase font-semibold `}>
-                                {state.weekDaysNames.map(weekDaysName => (
-                                    <span key={weekDaysName.dayShort}>{weekDaysName.dayShort}</span>
-                                ))}
-                            </div>
-                            <div className="calendar w-full grid  grid-cols-7 text-center gap-15px">
-                                <TooltipProvider>
-                                    {renderCalendarDays()}
-                                </TooltipProvider>
-                            </div>
-                        </>
-                    )}
-                    {state.mode === 'monthes' && (
-                        <div className="calendar__pick__items__container">
-                            {state.monthesNames.map(monthesName => {
-                                const currentMonth = new Date().getMonth() === monthesName.monthIndex && new Date().getFullYear() === state.selectedYear;
-                                const isSelectedMonth = monthesName.monthIndex === state.selectedMonth.monthIndex;
-
-                                return (
-                                    <div
-                                        className={[
-                                            'calendar__pick__item',
-                                            currentMonth ? 'calendar__today__item' : '',
-                                            isSelectedMonth ? 'calendar__selected__item' : ''
-                                        ].join(' ')}
-                                        key={monthesName.monthShort}
-                                        onClick={() => {
-                                            functions.setSelectedMonthHandler(monthesName.monthIndex);
-                                            functions.setMode('days');
-                                        }}
-                                    >
-                                        {monthesName.monthShort}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-                    {state.mode === 'years' && (
-                        <div className="">
-                            <div>{state.selectedYearRange[0] - 1}</div>
-                            {state.selectedYearRange.map((selectedYearItem) => {
-                                const currentYear = new Date().getFullYear() === selectedYearItem;
-                                const isSelectedYear = state.selectedYear === selectedYearItem;
-
-                                return (
-                                    <div
-                                        key={selectedYearItem}
-                                        className={`${currentYear ? '' : ''} ${isSelectedYear ? '' : ''}`}
-                                        onClick={() => {
-                                            functions.setMode('monthes');
-                                            functions.setSelectedYear(selectedYearItem);
-                                        }}
-                                    >
-                                        {selectedYearItem}
-                                    </div>
-                                );
-                            })}
-                            <div>{state.selectedYearRange[state.selectedYearRange.length - 1] + 1}</div>
-                        </div>
-                    )}
-                </div>
                 <button className="flex justify-center rounded-md bg-black/10 py-[5px] px-[10px] text-white border-transparent border-r-white/20 border-b-white/20 outline-none w-full mt-6 absolute bottom-0 " 
                         onClick={handleShowHolidays}>
                     {state.isLoading ? <SvgIcon name="spinner" size={24} color="rgba(25, 225, 174, 1)" className=" transition animate-spin" /> : 'Show hollidays'}

@@ -1,13 +1,11 @@
+import { WeekNamesArray } from "../../../types/WeekDaysNames";
 import { createDate } from "./createDate"
 
-interface weekNamesArray{
-    day: ReturnType<typeof createDate>['day']
-    dayShort: ReturnType<typeof createDate>['dayShort']
-}
+
 
 
 export const getWeekDaysNames = (firstWeekDay : number, locale: string = 'default') => {
-    const weekDaysNames : weekNamesArray[] = Array.from({length: 7})
+    const weekDaysNames : WeekNamesArray[] = Array.from({length: 7})
 
     const date = new Date();
 

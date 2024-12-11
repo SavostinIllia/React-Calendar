@@ -41,14 +41,11 @@ export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ child
               x = targetRect.left;
               y = targetRect.top - (tooltipRect.height + 5 );
               direction = 'right'
-              console.log('tooltipRect', tooltipRect)
             } else if (spaceLeft >= tooltipRect.width) {
-              console.log('first', tooltipRect.height)
               x = targetRect.right - tooltipRect.width;
               y = targetRect.top - (tooltipRect.height + 5);
               direction = 'left'
             }else {
-              debugger
               x = targetRect.left;
               y = targetRect.top - tooltipRect.height + 5;
               direction = 'right';
