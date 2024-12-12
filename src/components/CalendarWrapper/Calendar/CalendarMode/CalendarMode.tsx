@@ -54,12 +54,12 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
             case "days": 
                 return (
                     <>
-                        <div className={`w-full grid grid-cols-7 mb-[30px] py-[10px] rounded-md text-accent-text-color bg-black/20 text-center gap-15px uppercase font-semibold `}>
+                        <div className={` w-full grid grid-cols-7 items-center mb-[20px] py-[5px] rounded-md text-accent-text-color bg-black/20 text-center gap-15px uppercase font-semibold `}>
                             {weekDaysNames.map(weekDaysName => (
                                 <span key={weekDaysName.dayShort}>{weekDaysName.dayShort}</span>
                             ))}
                         </div>
-                        <div className="calendar w-full grid  grid-cols-7 text-center gap-15px">
+                        <div className="calendar flex-1 py-10 w-full grid  grid-cols-7 text-center gap-15px">
                             <TooltipProvider>
                                 {renderCalendarDaysFunc()}
                             </TooltipProvider>
@@ -68,33 +68,37 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
                 ) ;
             case "monthes":
                 return(
-                    <div className="w-full grid  grid-cols-3 text-center gap-15px">
+                    <div className="w-full flex items-center justify-center h-full ">
+                        <div className="w-full grid grid-cols-3 text-center gap-[50px]">
                         {monthesNames.map(monthesName => {
                             const currentMonth = new Date().getMonth() === monthesName.monthIndex && new Date().getFullYear() === selectedYear;
                             const isSelectedMonth = monthesName.monthIndex === selectedMonth.monthIndex;
-
+                            
                             return (
+                              
                                 <div
-                                    className={[
-                                        'calendar__pick__item',
-                                        currentMonth ? 'calendar__today__item' : '',
-                                        isSelectedMonth ? 'calendar__selected__item' : ''
-                                    ].join(' ')}
+                                    className='calendar__pick__item flex items-center justify-center hover:cursor-pointer'
                                     key={monthesName.monthShort}
                                     onClick={() => {
                                         setMonthHandler(monthesName.monthIndex);
                                         setModeHandler('days');
                                     }}
                                 >
-                                    {monthesName.monthShort}
+                                  <span className={`w-full rounded-md bg-black/10 border py-[5px] px-[10px] text-white border-transparent border-r-white/20 border-b-white/20 font-semibold hover:text-accent-text-color
+                                        ${currentMonth ? 'calendar__today__item !text-accent-text-color' : ''}
+                                        ${isSelectedMonth ? 'calendar__selected__item' : ''}
+                                    `}>{monthesName.month}</span>
                                 </div>
+                                
                             );
                         })}
+                        </div>
                     </div>
                 );
             case "years" : 
                 return(
-                    <div className="">
+                    <div className="w-full flex items-center justify-center h-full ">
+                        <div className="w-full grid grid-cols-3 text-center gap-[50px]">
                         <div>{selectedYearRange[0] - 1}</div>
                         {selectedYearRange.map((selectedYearItem) => {
                             const currentYear = new Date().getFullYear() === selectedYearItem;
@@ -103,7 +107,7 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
                             return (
                                 <div
                                     key={selectedYearItem}
-                                    className={`${currentYear ? '' : ''} ${isSelectedYear ? '' : ''}`}
+                                    className={` w-full rounded-md bg-black/10 border py-[5px] px-[10px] text-white border-transparent border-r-white/20 border-b-white/20 ${currentYear ? '' : ''} ${isSelectedYear ? '' : ''}`}
                                     onClick={() => {
                                         setModeHandler('monthes');
                                         setSelectedYearHandler(selectedYearItem);
@@ -115,6 +119,7 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
                         })}
                         <div>{selectedYearRange[selectedYearRange.length - 1] + 1}</div>
                     </div>
+                    </div>
                 );
             default: 
                 return (<p>Error</p>)
@@ -122,7 +127,7 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
     }
 
     return (
-        <div className="flex flex-wrap h-full">
+        <div className="flex h-full flex-col items-start ">
             <header className={`pb-40px uppercase font-semibold text-3xl flex justify-between w-full `} >
                 {mode === 'days' && (
                     <div className="text-accent-text-color hover:cursor-pointer" onClick={() => setModeHandler('monthes')}>{renderHeaderTitle()}</div>

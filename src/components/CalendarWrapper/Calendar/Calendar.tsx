@@ -101,7 +101,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                 selectedDateRange={state.selectedDateRange}        
                 dateGetRange={state.dateGetRange}       
             />
-            <div className="w-3/5 p-[40px] pb-3 self-stretch relative">
+            <div className="w-3/5 py-[50px] px-3 pt-[20px] self-stretch relative">
                 <CalendarMode mode={state.mode} 
                     weekDaysNames={state.weekDaysNames} 
                     monthesNames={state.monthesNames}
@@ -114,7 +114,7 @@ export const Calendar: React.FC<CalendarProps> = ({
                     handleNextStep={handleNextStep}
                     handlePrevStep={handlePrevStep}
                     />
-                <button className="flex justify-center rounded-md bg-black/10 py-[5px] px-[10px] text-white border-transparent border-r-white/20 border-b-white/20 outline-none w-full mt-6 absolute bottom-0 " 
+                <button className="flex justify-center rounded-md bg-black/10 text-white border-transparent border-r-white/20 border-b-white/20 outline-none w-full absolute bottom-3 py-[5px] " 
                         onClick={handleShowHolidays}>
                     {state.isLoading ? <SvgIcon name="spinner" size={24} color="rgba(25, 225, 174, 1)" className=" transition animate-spin" /> : 'Show hollidays'}
                 </button>

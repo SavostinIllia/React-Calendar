@@ -42,7 +42,7 @@ body::after {
   :root {
     --turqoise: rgba(25, 225, 174, 1);
     --mint: rgba(152, 255, 152, 1);
-    --current-day: rgba(235, 194, 47, 1);
+    --current: rgba(235, 194, 47, 1);
     --flat-orange: rgba(255, 107, 107, 1);
     --board-bg: rgba(96, 111, 238, 1);
     --violet: rgba(224, 152, 246, 1);
