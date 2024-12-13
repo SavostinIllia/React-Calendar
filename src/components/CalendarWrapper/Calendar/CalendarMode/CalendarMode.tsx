@@ -1,4 +1,4 @@
-import { SetStateAction } from "react";
+import React, { SetStateAction } from "react";
 import { TooltipProvider } from "../../../../context";
 import { MontheNamesArray, WeekNamesArray } from "../../../../types/index";
 import { createMonth } from "../../../../utils/helpers/date";
@@ -36,18 +36,52 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
     handleNextStep
     }) => {
 
-    const renderHeaderTitle = () => {
-        switch (mode) {
-            case 'days':
-            return `${monthesNames[selectedMonth.monthIndex].month} ${selectedYear}`;
-            case 'monthes':
-            return selectedYear;
-            case 'years':
-            return `${selectedYearRange[0]} - ${selectedYearRange[selectedYearRange.length - 1]}`;
-            default:
-            return '';
-        }
-    };
+
+    const renderHeaderTitle = React.useMemo(() => {
+        const titles = {
+            days: `${monthesNames[selectedMonth.monthIndex].month} ${selectedYear}`,
+            monthes: `${selectedYear}`,
+            years: `${selectedYearRange[0]} - ${selectedYearRange[selectedYearRange.length - 1]}`,
+        };
+    
+        const nextMode = {
+            days: "monthes",
+            monthes: "years",
+            years: "days",
+        } as const;
+        
+        const calendarHeaderTitle = (
+            <div
+                className="text-accent-text-color hover:cursor-pointer"
+                onClick={() => setModeHandler(nextMode[mode])}
+            >
+                {titles[mode]}
+            </div>
+        );
+    
+        return (
+            <header className="pb-40px uppercase font-semibold text-3xl flex justify-between w-full">
+                {calendarHeaderTitle}
+                <div className="ml-auto flex gap-2">
+                    <button
+                        aria-label="Go to previous step"
+                        className="hover:cursor-pointer"
+                        onClick={handlePrevStep}
+                    >
+                        <SvgIcon name="arrow" size={44} className="text-accent-text-color hover:text-board-bg" />
+                    </button>
+                    <button
+                        aria-label="Go to next step"
+                        className="rotate-180 hover:cursor-pointer"
+                        onClick={handleNextStep}
+                    >
+                        <SvgIcon name="arrow" size={44} className="text-accent-text-color" />
+                    </button>
+                </div>
+            </header>
+        );
+    }, [mode, selectedMonth, selectedYear, selectedYearRange]);
+        
 
     const renderCalendarModeBoard = () => {
         switch (mode) {
@@ -77,17 +111,18 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
                             return (
                               
                                 <div
-                                    className='calendar__pick__item flex items-center justify-center hover:cursor-pointer'
+                                    className={` flex items-center justify-center rounded-md p-2 bg-black/10 text-white border-transparent border-r-white/20 border-b-white/20  hover:cursor-pointer
+                                        ${currentMonth ? ' bg-accent-text-color ' : ''}
+                                        ${isSelectedMonth ? '!bg-mint' : ''}`}
                                     key={monthesName.monthShort}
                                     onClick={() => {
                                         setMonthHandler(monthesName.monthIndex);
                                         setModeHandler('days');
                                     }}
                                 >
-                                  <span className={`w-full rounded-md bg-black/10 border py-[5px] px-[10px] text-white border-transparent border-r-white/20 border-b-white/20 font-semibold hover:text-accent-text-color
-                                        ${currentMonth ? 'calendar__today__item !text-accent-text-color' : ''}
-                                        ${isSelectedMonth ? 'calendar__selected__item' : ''}
-                                    `}>{monthesName.month}</span>
+                                  <span className={` font-semibold`}>
+                                    {monthesName.month}
+                                  </span>
                                 </div>
                                 
                             );
@@ -99,25 +134,30 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
                 return(
                     <div className="w-full flex items-center justify-center h-full ">
                         <div className="w-full grid grid-cols-3 text-center gap-[50px]">
-                        <div>{selectedYearRange[0] - 1}</div>
-                        {selectedYearRange.map((selectedYearItem) => {
-                            const currentYear = new Date().getFullYear() === selectedYearItem;
-                            const isSelectedYear = selectedYear === selectedYearItem;
-
-                            return (
-                                <div
-                                    key={selectedYearItem}
-                                    className={` w-full rounded-md bg-black/10 border py-[5px] px-[10px] text-white border-transparent border-r-white/20 border-b-white/20 ${currentYear ? '' : ''} ${isSelectedYear ? '' : ''}`}
-                                    onClick={() => {
-                                        setModeHandler('monthes');
-                                        setSelectedYearHandler(selectedYearItem);
-                                    }}
-                                >
-                                    {selectedYearItem}
-                                </div>
-                            );
-                        })}
-                        <div>{selectedYearRange[selectedYearRange.length - 1] + 1}</div>
+                            <div className=" flex items-center justify-center rounded-md p-2 bg-black/10 text-white border-transparent border-r-white/20 border-b-white/20 opacity-50 hover:cursor-not-allowed">{
+                                selectedYearRange[0] - 1}
+                            </div>
+                            {selectedYearRange.map((selectedYearItem) => {
+                                const currentYear = new Date().getFullYear() === selectedYearItem;
+                                const isSelectedYear = selectedYear === selectedYearItem;
+                                return (
+                                    <div
+                                        key={selectedYearItem}
+                                        className={` flex items-center justify-center rounded-md p-2 bg-black/10 text-white border-transparent border-r-white/20 border-b-white/20  hover:cursor-pointer
+                                            ${currentYear ? ' bg-accent-text-color ' : ''}
+                                            ${isSelectedYear ? '!bg-mint' : ''}`}
+                                        onClick={() => {
+                                            setModeHandler('monthes');
+                                            setSelectedYearHandler(selectedYearItem);
+                                        }}
+                                    >
+                                        {selectedYearItem}
+                                    </div>
+                                );
+                            })}
+                            <div className=" flex items-center justify-center rounded-md p-2 bg-black/10 text-white border-transparent border-r-white/20 border-b-white/20 opacity-50 hover:cursor-not-allowed">
+                                {selectedYearRange[selectedYearRange.length - 1] + 1}
+                            </div>
                     </div>
                     </div>
                 );
@@ -128,35 +168,9 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
 
     return (
         <div className="flex h-full flex-col items-start ">
-            <header className={`pb-40px uppercase font-semibold text-3xl flex justify-between w-full `} >
-                {mode === 'days' && (
-                    <div className="text-accent-text-color hover:cursor-pointer" onClick={() => setModeHandler('monthes')}>{renderHeaderTitle()}</div>
-                )}
-                {mode === 'monthes' && (
-                    <div className="text-accent-text-color hover:cursor-pointer" onClick={() => setModeHandler('years')}>{renderHeaderTitle()}</div>
-                )}
-                {mode === 'years' && (
-                    <div className="text-accent-text-color hover:cursor-pointer" onClick={() => setModeHandler('days')}>{renderHeaderTitle()}</div>
-                )}
-
-                <div className=" ml-auto flex gap-2">
-                    <button
-                        aria-hidden
-                        className={`hover:cursor-pointer`}
-                        onClick={handlePrevStep}>
-                            <SvgIcon name="arrow" size={44} className=" text-accent-text-color hover:text-board-bg" />
-                    </button>
-                    <button
-                        aria-hidden
-                        className={`rotate-180 hover:cursor-pointer `}
-                        onClick={handleNextStep}>
-                            <SvgIcon name="arrow" size={44} className=" text-accent-text-color hover:" />
-                    </button>
-                </div>
-            </header>
+            {renderHeaderTitle}
 
             {renderCalendarModeBoard()}
-
         </div>
     )
 }
