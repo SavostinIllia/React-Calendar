@@ -69,7 +69,7 @@ export const Calendar: React.FC<CalendarProps> = ({
             return (
                 <div
                     draggable
-                    className={`date-column w-full flex items-center justify-center relative z-10 ${state.dateRangeReverted ? 'reverted' : ''}`}
+                    className={`date-column w-full flex items-center justify-center relative ${state.dateRangeReverted ? 'reverted' : ''}`}
                     key={`${day.dayNumber}-${day.monthIndex}`}
                     onDragStart={() => handleDragStart(day)}
                     onDragEnter={() => handleDragEnter(day)}
@@ -90,7 +90,6 @@ export const Calendar: React.FC<CalendarProps> = ({
             );
         });
     };
-    console.log('state.mode', state.mode)
 
     return (
         <>  

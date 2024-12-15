@@ -74,8 +74,8 @@ export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ child
       { tooltip?.content &&
         ReactDOM.createPortal(
           <div
-            className={`tooltip absolute bg-black text-white rounded-md p-[10px]  transition-opacity duration-[.4s]  max-w-[400px] z-10
-                        ${isVisible  ? 'show opacity-100  ' : 'hide opacity-0 -z-10 '} 
+            className={`tooltip absolute bg-black text-white rounded-md p-[10px]  transition-opacity duration-[.4s] max-w-[400px]
+                        ${isVisible  ? 'show opacity-100 z-20' : 'hide opacity-0 -z-10 '} 
                         ${tooltip?.direction}`}
             style={{
                 top: `${tooltip && tooltip.coords.y}px`,

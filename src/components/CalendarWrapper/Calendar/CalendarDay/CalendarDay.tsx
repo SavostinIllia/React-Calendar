@@ -65,7 +65,7 @@ export const CalendarDay:React.FC<CalendarDayProps> = ({
 
     return (
         <div className={[
-            'date p-30 rounded-full w-[60px] h-[60px] flex items-center justify-center text-txt-color font-semibold transition hover:cursor-pointer relative ',
+            'date p-30 rounded-full w-[60px] h-[60px] flex items-center justify-center text-txt-color font-semibold transition hover:cursor-pointer relative z-20 ',
             currentDate ? 'current_day bg-current' : '',
             isSelectedDay ? 'is__selected bg-mint' : '',
             isAdditionalDay ? 'opacity-40' : '',
