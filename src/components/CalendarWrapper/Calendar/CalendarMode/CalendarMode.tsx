@@ -68,14 +68,14 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
                         className="hover:cursor-pointer"
                         onClick={handlePrevStep}
                     >
-                        <SvgIcon name="arrow" size={44} className="text-accent-text-color hover:text-board-bg" />
+                        <SvgIcon name="arrow" size={44} className="text-accent-text-color hover:text-mint transition" />
                     </button>
                     <button
                         aria-label="Go to next step"
                         className="rotate-180 hover:cursor-pointer"
                         onClick={handleNextStep}
                     >
-                        <SvgIcon name="arrow" size={44} className="text-accent-text-color" />
+                        <SvgIcon name="arrow" size={44} className="text-accent-text-color hover:text-mint transition" />
                     </button>
                 </div>
             </header>
@@ -112,7 +112,7 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
                               
                                 <div
                                     className={` flex items-center justify-center rounded-md p-2 bg-black/10 text-white border-transparent border-r-white/20 border-b-white/20  hover:cursor-pointer
-                                        ${currentMonth ? ' bg-accent-text-color ' : ''}
+                                        ${currentMonth ? ' !bg-accent-text-color ' : ''}
                                         ${isSelectedMonth ? '!bg-mint' : ''}`}
                                     key={monthesName.monthShort}
                                     onClick={() => {
@@ -144,7 +144,7 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
                                     <div
                                         key={selectedYearItem}
                                         className={` flex items-center justify-center rounded-md p-2 bg-black/10 text-white border-transparent border-r-white/20 border-b-white/20  hover:cursor-pointer
-                                            ${currentYear ? ' bg-accent-text-color ' : ''}
+                                            ${currentYear ? ' !bg-accent-text-color ' : ''}
                                             ${isSelectedYear ? '!bg-mint' : ''}`}
                                         onClick={() => {
                                             setModeHandler('monthes');
@@ -169,7 +169,6 @@ export const CalendarMode:React.FC<CalendarModeProps>  = ({
     return (
         <div className="flex h-full flex-col items-start ">
             {renderHeaderTitle}
-
             {renderCalendarModeBoard()}
         </div>
     )

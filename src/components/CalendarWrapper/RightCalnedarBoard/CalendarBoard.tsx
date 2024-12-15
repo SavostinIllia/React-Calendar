@@ -2,7 +2,7 @@ import React from "react";
 import { CreateDateReturnType, Holiday, EventListItem } from "../../../types";
 import { CalendarDayEventSetter } from "./CalendarDayEventSetter";
 import { useCalendarDayEventsContext } from "../../../context";
-import { DayEventItem } from "./DayEventItem";
+import { CalendarDayEventItem } from "./CalendarDayEventItem";
 import { createDate } from "../../../utils/helpers/date";
 
 interface RightBoardCalendarProps {
@@ -62,7 +62,7 @@ export const RightBoard = ({
         
         return (
             <div className="mb-[20px]" ref={holidaysContainerRef}>
-                <h3 className="holliday__text text-violet text-4xl mb-4">Holiday this day's</h3>
+                <h3 className="holliday__text text-turquoise text-4xl mb-4">Holiday this day's</h3>
                 <ul className="list__wrapper relative h-auto overflow-y-auto pr-2 py-2">
                     {dateRangeWithHolidays.map((holiday) => (
                         <li
@@ -83,7 +83,7 @@ export const RightBoard = ({
     const renderEventsList = (eventList: EventListItem[] | undefined, day?: CreateDateReturnType, ) => {
         return eventList && eventList.map((event) => (
             <li key={event.id} className="event__item flex basis-full text-txt-color w-full justify-start gap-[10px] mb-5 py-[5px] px-[10px] bg-black/[0.1] rounded-lg z-10 last:mb-0">
-                <DayEventItem event={event} day={day} />
+                <CalendarDayEventItem event={event} day={day} />
             </li>
         ));
     }
@@ -96,7 +96,7 @@ export const RightBoard = ({
 
         return (
             <div className='event__wrapper relative h-auto'>
-                <h3 className="eventslist__text text-turquoise text-3xl mb-2 pb-3 flex justify-between"> Event's for Today - {todayEvents.eventsListForTheDay.length}</h3>
+                <h3 className="eventslist__text text-board-bg text-3xl mb-2 pb-3 flex justify-between"> Event's for Today - {todayEvents.eventsListForTheDay.length}</h3>
                 <ul className="list__wrapper overflow-y-auto pr-2 mb-3" style={{maxHeight: `${availableHeight}px`}}>
                         {renderEventsList(todayEvents.eventsListForTheDay, todayEvents)}
                 </ul>
@@ -181,17 +181,20 @@ export const RightBoard = ({
                         </h1>
                     </div>
                 ) : (
-                    <>
-                        <h1 className="text-[130px] leading-none">{selectedDate.dayNumber}</h1>
-                        <h2 className="text-3xl">{selectedDate.day}</h2>
-                    </>
+                    <div className="flex text-white justify-center gap-2">
+                        <h1 className="text-[140px] leading-none">{selectedDate.dayNumber}</h1>
+                        <h2 className="text-3xl flex justify-end wrap flex-col text-left content-end pb-[10px]">
+                            <p>{selectedDate.day}</p> 
+                            <p>{selectedDate.month} {selectedDate.year}</p>
+                        </h2>
+                    </div>
                 )}
             </div>
             
             {holidaysInDateRange ||
                 (holidayInformation?.name && (
                     <div className="text-txt-color mb-5" ref={holidaysContainerRef}>
-                        <h3 className="holliday__text text-violet text-4xl mb-4">Holiday this day</h3>
+                        <h3 className="holliday__text text-turquoise text-4xl mb-4">Holiday this day</h3>
                         <p className="bg-black/[0.1] rounded-lg py-[5px] px-[10px] text-xl">
                             {holidayInformation.name}
                         </p>

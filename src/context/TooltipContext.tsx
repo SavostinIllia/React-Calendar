@@ -13,13 +13,13 @@ export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const [tooltip, setTooltip] = useState<{ 
         content?: React.ReactNode;
         coords: { x: number; y: number };
-        direction: 'right' | 'left' | string ;
+        direction?: 'right' | 'left' | string ;
     } | null>(null);
     const [isVisible, setIsVisible] = useState(false);
     const tooltipRef = React.useRef<HTMLDivElement>(null);
     
     const showTooltip = (content: React.ReactNode, targetElement: HTMLElement, targetMainParent: HTMLElement) => {
-      setTooltip({ content, coords: { x: -999, y: -999 }, direction: 'right' });
+      setTooltip({ content, coords: { x: -999, y: -999 }});
       setIsVisible(true);
 
       setTimeout(() => {
@@ -39,15 +39,15 @@ export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
             if (spaceRight >= tooltipRect.width) {
               x = targetRect.left;
-              y = targetRect.top - (tooltipRect.height + 5 );
+              y = targetRect.top - (tooltipRect.height + 10 );
               direction = 'right'
             } else if (spaceLeft >= tooltipRect.width) {
               x = targetRect.right - tooltipRect.width;
-              y = targetRect.top - (tooltipRect.height + 5);
+              y = targetRect.top - (tooltipRect.height + 10);
               direction = 'left'
-            }else {
+            }else {``
               x = targetRect.left;
-              y = targetRect.top - tooltipRect.height + 5;
+              y = targetRect.top - (tooltipRect.height + 10);
               direction = 'right';
             }
 
@@ -71,11 +71,11 @@ export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ child
   return (
     <TooltipContext.Provider value={{ showTooltip, hideTooltip }}>
       {children}
-      {
+      { tooltip?.content &&
         ReactDOM.createPortal(
           <div
-            className={`tooltip absolute bg-black text-white rounded-md p-[10px] z-10 transition-opacity duration-[.3s]
-                        ${isVisible  ? 'show opacity-100' : 'hide opacity-0 z-[-1]'} 
+            className={`tooltip absolute bg-black text-white rounded-md p-[10px]  transition-opacity duration-[.4s]  max-w-[400px] z-10
+                        ${isVisible  ? 'show opacity-100  ' : 'hide opacity-0 -z-10 '} 
                         ${tooltip?.direction}`}
             style={{
                 top: `${tooltip && tooltip.coords.y}px`,
