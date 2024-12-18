@@ -1,3 +1,3 @@
-[https://calendar-savostinillias-projects.vercel.app/][website]
+https://calendar-savostinillias-projects.vercel.app/
+[<img src="src/static/images/preview.png" />]
 
-(src/static/images/preview.png)
