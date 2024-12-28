@@ -16,7 +16,7 @@ interface CalendarProps {
 }
 
 export const Calendar: React.FC<CalendarProps> = ({
-    locale = 'default',
+    locale = 'en',
     firstWeekDay = 2,
     selectedDate,
 }) => {

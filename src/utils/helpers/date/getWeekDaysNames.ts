@@ -4,7 +4,7 @@ import { createDate } from "./createDate"
 
 
 
-export const getWeekDaysNames = (firstWeekDay : number, locale: string = 'default') => {
+export const getWeekDaysNames = (firstWeekDay : number, locale: string = 'en') => {
     const weekDaysNames : WeekNamesArray[] = Array.from({length: 7})
 
     const date = new Date();

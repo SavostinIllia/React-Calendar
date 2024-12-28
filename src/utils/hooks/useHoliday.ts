@@ -7,7 +7,7 @@ const holidayApiUrl = "https://calendarific.com/api/v2/holidays";
 interface HolidayFetchHandlerParams {
   year: number;
   month: number;
-  country?: string | "default";
+  country?: "US";
 }
 
 interface HolidayFetchResponse {
@@ -24,18 +24,16 @@ export const useHolidayFetchHandler = ({ year, month, country }: HolidayFetchHan
 
   const fetchHolidays = async (): Promise<HolidayFetchResponse> => {
     const response = await fetch(
-          `${holidayApiUrl}?&api_key=${holidayApiKey}&country=${country?.split("-")[1]}&year=${year}&month=${month}`
+          `${holidayApiUrl}?&api_key=${holidayApiKey}&country=${country}&year=${year}&month=${month}`
     );
-
+    debugger
     if (!response.ok) {
       throw new Error(`Failed to fetch holidays: ${response.statusText}`);
     }
 
     const data = await response.json();
 
-    if (!data || !data.response || !data.response.holidays) {
-      throw new Error("Invalid holiday data received from API");
-    }
+    if (!data?.response?.holidays) throw new Error("Invalid holiday data received from API");
 
     return data;
   };
