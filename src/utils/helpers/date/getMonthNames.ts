@@ -2,7 +2,7 @@ import { MontheNamesArray } from "../../../types";
 import { createDate } from "./createDate"
 
 
-export const getMonthesNames = (locale: string = 'default') => {
+export const getMonthesNames = (locale: string = 'en') => {
     const monthesNames:MontheNamesArray[] = Array.from({length: 12})
 
     const d = new Date();

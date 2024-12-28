@@ -18,7 +18,7 @@ const getYearsRange = (year: number) => {
 
 
 export const useCalendar = ({
-    locale = 'default',
+    locale = 'en',
     selectedDate: date,
     firstWeekDay = 2
 }: useCalendarParams) => {
@@ -52,7 +52,7 @@ export const useCalendar = ({
 
     const days = React.useMemo(() => selectedMonth.createMonthDays(), [selectedMonth, selectedYear])
 
-    const {holidaysState, fetchFunction} = useHolidayFetchHandler({year : selectedYear , month : selectedMonth.monthNumber , country: locale} )
+    const {holidaysState, fetchFunction} = useHolidayFetchHandler({year : selectedYear , month : selectedMonth.monthNumber, country: "US"} )
 
     const calendarDaysToShow = React.useMemo(() => {
 
